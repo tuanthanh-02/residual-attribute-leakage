@@ -19,7 +19,7 @@ value cannot tell information removal from confident misdirection.
 | page | what it holds |
 |---|---|
 | `index.html` | **Results** — eight readings over one fixed release set, the same releases on a second corpus, the seven protocol choices, who the scorer asks about, what each editing principle contributes, and the reporting checklist |
-| `analyse.html` | **Demo app** — the whole protocol run on a sentence you write: inference, five releases, the adversary's prior and posterior, the per-order split, an opt-in rule-aware pass, and the cue layer on its own |
+| `analyse.html` | **Run the protocol** — the whole protocol run on a sentence you write: inference, five releases, the adversary's prior and posterior, the per-order split, an opt-in rule-aware pass, and the cue layer on its own |
 
 No build step, no dependencies, no backend. An API key is needed only if you choose to run the
 adversary yourself, and nothing is sent until you press Run.
@@ -34,7 +34,7 @@ blocks the `fetch` of `data.json` on `file://`, and the page says so if that hap
 ## What is in the repository
 
     index.html      the results page
-    analyse.html    the end-to-end demo app
+    analyse.html    the protocol run on a sentence you write
     app.js          both pages; the protocol, the cue layer and the inference
     app.css         one stylesheet
     data.json       every number on the site, generated from the manuscript

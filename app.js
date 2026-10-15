@@ -7,8 +7,8 @@ const el = (t, a = {}, h = "") => { const n = document.createElement(t);
    places and four where the paper states four (the sweep's median |dL| is .0003 on one choice
    and .0084 on another). Padding those to a fixed width would invent precision, and cutting
    them to two would erase the one comparison that column exists to make.
-   The demo app prints two places, which is what a single sentence supports; a quantity that is
-   not zero is still never shown as ".00". */
+   The protocol page prints two places, which is what a single sentence supports; a quantity
+   that is not zero is still never shown as ".00". */
 const onApp = () => (document.body && document.body.dataset.page) === "analyse";
 
 const fmt = v => {
