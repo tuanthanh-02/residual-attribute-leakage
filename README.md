@@ -1,136 +1,99 @@
 # Residual Attribute Leakage Is an Interface
 
-Interactive companion to the paper
+### Auditing Privacy Evaluation After Text De-identification
 
-> **Residual Attribute Leakage Is an Interface: Auditing Privacy Evaluation After Text
-> De-identification**
+Companion repository for the paper. **Interactive version of every figure and table, and the
+protocol runnable on your own text: <https://tuanthanh-02.github.io/residual-attribute-leakage/>**
 
-**Demo: <https://tuanthanh-02.github.io/residual-attribute-leakage/>**
+---
 
-A privacy verdict for a fixed de-identified text changes with how it is scored, who the scorer
-asks about, and which adversary reads it. This repository holds a two-page site that shows that
-on the paper's own numbers, and then lets you run the same protocol on a sentence of your own.
+A privacy evaluation of de-identified text asks a language model — the *adversary* — to guess a
+person's protected attribute. The paper introduces a prior-normalised clipped leakage score of the
+adversary's confidence gain on the true value, and audits the conclusions drawn from it.
 
-The point it is built around: an editor that writes the **opposite-sex form at exactly the spans a
-redaction editor would redact** misleads the adversary about most people, yet ranks *first* among
-eight releases under a clipped leakage score. A reading that scores only the answer about the true
-value cannot tell information removal from confident misdirection.
+Each verdict depends on an **evaluation interface**: the queried person, the answer options, the
+prior, the adversary model and the scoring rule. We vary those on fixed releases of three corpora
+and ask whether the verdict survives.
 
-| page | what it holds |
-|---|---|
-| `index.html` | **Results** — eight readings over one fixed release set, the same releases on a second corpus, the seven protocol choices, who the scorer asks about, what each editing principle contributes, and the reporting checklist |
-| `analyse.html` | **Run the protocol** — the whole protocol run on a sentence you write: inference, five releases, the adversary's prior and posterior, the per-order split, an opt-in rule-aware pass, and the cue layer on its own |
+## What the paper shows
 
-No build step, no dependencies, no backend. An API key is needed only if you choose to run the
-adversary yourself, and nothing is sent until you press Run.
+**A clipped leakage score rewards misdirection.** SWAP, a deliberately invertible counterexample,
+writes the opposite-sex form at exactly the spans a redaction editor would redact. It misleads the
+adversary on 74% of its MedQA `Sex` entries, and still ranks **1 of 8**
+under the score, at `L` = .536. Attack accuracy and proper scoring rules read as privacy
+rank it first too. Crediting only the increase above a document-free prior charges a release for
+what it adds; the risk is the other half, where a drop below the prior costs nothing.
 
-## Run it locally
+**Two readings are not fooled.** A relabelling-invariant reading of AUC puts the same editor
+**6th of 8**, and `Disclosing`, which counts movement in either direction,
+also declines to credit it. Because SWAP's rule is fixed and invertible, it admits a direct test:
+told the rule, the development adversary's mean probability on the true value rises from
+.252 to .769, and `L` rises by .414
+[.374, .454]. The clip's zero is an artefact of the score, not evidence
+that the attribute was erased.
 
-    python3 -m http.server 8000
+**On ordinary releases, the interface mostly moves certainty, not direction.** Over all pairs of
+released texts, most changed verdicts are gains or losses of separability. Of six choices varied
+over every pair, only the adversary family reverses comparisons — 5 of its
+124 changes — and the query can target the wrong person.
 
-Then open <http://localhost:8000/>. Opening `index.html` from disk will not work: the browser
-blocks the `fetch` of `data.json` on `file://`, and the page says so if that happens.
+**The audit yields a reporting checklist.** Four things belong beside any leakage score:
 
-## What is in the repository
+- **Score.** report L with two-sided displacement and, where applicable, AUC, and explain any disagreement (e.g., SWAP, Table tab:x1 ); where an editor's rule is public, run a rule-aware adversary too.
+- **Reference and cohort.** give paraphrasing and in-place editors the same reference, and report first-named and other subjects separately.
+- **Adversary and abstention.** report every adversary used, including any that reverses a result, say whether it knows the editing rule, and report both conventions for declined answers.
+- **Uncertainty and content.** separate reversals from changes in separability, give each non-separable comparison's minimum detectable difference, and validate content measures.
 
-    index.html      the results page
-    analyse.html    the protocol run on a sentence you write
-    app.js          both pages; the protocol, the cue layer and the inference
-    app.css         one stylesheet
-    data.json       every number on the site, generated from the manuscript
-    tools/          the generator that writes data.json
-    .nojekyll       so GitHub Pages serves the files as they are
-
-## Where the numbers come from
-
-`data.json` is written by `tools/make_demo_data.py`, which parses the manuscript's own tables and
-exports the cue layer (lexicons, the rewrite table, the 17-form flip map, the keep-list) from the
-frozen editor code, because the page has to run it on text the paper never saw.
-
-The generator refuses to write the file if any of its checks fail, so the site cannot drift away
-from the paper. Among them: the `|AUC-.5|` ranking recomputed from the table's own AUC column must
-reproduce the printed ranks; the misdirecting release must still hold the lowest MedQA `L`; only
-the adversary row may contain reversals; closure must remain the largest ablation gain; the
-editor must still edit the fewest characters on the unseen corpora; two of three judges must still
-fail their own control; and no string reaching the page may still contain LaTeX.
-
-It reads the paper source and the frozen method package, so it runs in the research tree rather
-than in a clone of this repository; it takes the output path as its first argument and is included
-here for provenance:
-
-    python make_demo_data.py /path/to/this/repo/data.json
+**SACC is the instrument, not the claim.** Scoped Attribute-Cue Closure is a traceable editor
+built so that every edit is attributable to a rule. That is what makes SWAP constructible at
+precisely the spans another editor would redact, and what allows two editing principles to be
+ablated one at a time. The paper reports where its advantage does not hold.
 
 ## The seven protocol choices
 
-The paper's evaluation contribution stated as a list: the choices an attribute-inference
-evaluation has to make. The releases are held fixed and re-read under the alternative.
-
-| | choice | the reading the main protocol takes | effect |
+| | choice | the reading the main protocol takes | the alternative examined |
 |---|---|---|---|
-| 1 | Wrong-belief credit | Clipping floors negative changes in gold-value confidence at zero leakage | 11/84 verdicts changed |
-| 2 | Subject reference | References depend on each editor's output | 3/45 verdicts changed |
-| 3 | Candidate order | Seeded orders retain a positional bias in π | 13/252 verdicts changed |
-| 4 | Which subject is read | Aggregate all annotated subjects | 4/28 verdicts changed |
-| 5 | Content proxies | Accept U_nli, TPS and LLM judgments without validity checks | validated, not swept |
-| 6 | Adversary family | Evaluate with one development adversary | 124/504 verdicts changed |
-| 7 | Abstention | Declined answers are dropped or assigned the prior without an explicit rule | 6/75 verdicts changed |
+| 1 | **Wrong-belief credit** | Clipping floors negative changes in gold-value confidence at zero leakage | Signed residual; three outcome states with Leaking and Disclosing |
+| 2 | **Subject reference** | References depend on each editor's output | Match references across editors or derive one from the input |
+| 3 | **Candidate order** | Seeded orders retain a positional bias in π | Balance gold-first and gold-second orders for Sex; report AUC alongside L |
+| 4 | **Which subject is read** | Aggregate all annotated subjects | Split by subject position and exclude shared references |
+| 5 | **Content proxies** | Accept U_nli, TPS and LLM judgments without validity checks | Check placeholder effects, a second encoder and judgments on the anonymised input |
+| 6 | **Adversary family** | Evaluate with one development adversary | Compare three model families and consider the worst case |
+| 7 | **Abstention** | Declined answers are dropped or assigned the prior without an explicit rule | State the convention and report both readings |
 
-Six are re-read as verdicts over every pair of releases. The seventh is validated by judge
-controls instead, and its row says so rather than borrowing a number from a neighbour.
+Six are re-read as verdicts over every pair of releases; the content proxies are validated by
+judge controls instead, and two of three judges fail their own control.
 
-## Which adversary, and what a run costs
+## Setup
 
-Capability decides this list and price only orders it: a model that will not return
-log-probabilities cannot run the protocol at any price. Every model here was measured, and the
-rates are the constants this project's own cost estimators use.
+**Corpora.** 1,249 MedQA clinical vignettes, 144 TAB court judgments with per-person annotations,
+and 281 SynthPAI posts. A protected *entry* pairs a person with an attribute and a gold value:
+`Sex` and `Occupation` on MedQA and TAB, `Relationship` on SynthPAI.
 
-| model | USD per 1M in / out | transport | option letters it can score | evidence |
-|---|---|---|---|---|
-| `gpt-4o-mini` **(recommended)** | 0.15 / 0.60 | frozen | 8 | a full pass |
-| `gpt-4.1-mini` | 0.40 / 1.60 | frozen | 8 | smoke test |
-| `gpt-5.4-nano` | 0.20 / 1.25 | top-5 | 2 | a full pass |
-| `gpt-5.1` | 1.25 / 10.00 | top-5 | 2 | smoke test |
-| `gpt-5.2` | 1.75 / 14.00 | top-5 | 2 | smoke test |
+**Scorer.** A multiple-choice adversary is asked, for a named person, which value an attribute
+takes. The first token is read at temperature 0, the mass on the option letters is renormalised,
+and leakage is `L = clip((p − π) / (1 − π), 0, 1)` against a document-free prior π, averaged over
+balanced candidate orders. The band δ = .05 separates *Leaking*, *Anonymised* and *Misled*.
 
-Of the 41 model IDs probed once each, 16 refuse log-probabilities
-outright, 8 answer only on another endpoint, 9 are
-deprecated and 5 were rejected by our own `top_logprobs: 20` and never retried
-at 5 — reported as untested rather than unusable, because that is all the measurement supports.
+**Adversaries.** All headline numbers are frozen on one development adversary. Other families are
+confirmation readings: they have their own priors, so a contrast's direction and size transfer,
+its level does not.
 
-The 5-series needs a different payload and returns mass for fewer letters, so the app refuses to
-score an attribute with more candidate values than the model can carry, rather than returning a
-probability that is an artefact of a truncated list. A run of the five releases costs a small
-fraction of a cent; the call count and both cost estimates are shown before anything is sent.
+## This repository
 
-Only the recommended model is the paper's: the published figures are frozen on it. A reading from
-another family has its own priors and confirms or fails to confirm a claim rather than reproducing
-a number.
+    index.html      the paper's results, every figure read from the manuscript
+    analyse.html    the protocol, run on a sentence you write
+    app.js app.css  the pages
+    data.json       every number on the site
+    tools/          the generator that writes data.json
 
-## The sample passages
+`data.json` is produced by `tools/make_demo_data.py`, which parses the manuscript's tables and
+exports the frozen cue layer. It refuses to write the file if any of its checks against the
+printed numbers fail — among them that the `|AUC-.5|` ranking recomputed from the table's own AUC
+column reproduces the printed ranks, and that no string reaching the page still contains LaTeX.
 
-The four starting passages are the length of a real record. Each was run against the development
-adversary before it was put in the page, and on all four the misdirecting release takes the best
-clipped `L` while writing the opposite-sex form. They were chosen by measurement, and the
-candidates that did not reproduce it were dropped — which is why a demo is an illustration and not
-evidence.
+    python tools/make_demo_data.py data.json      # runs in the research tree
 
-## Using your own key
+## Citation
 
-The key stays in the page, in memory, and goes only to the provider's endpoint; the page writes
-nothing to storage. A key typed into any web page is readable by that page, so use a restricted
-key and revoke it afterwards. Your text is sent to the provider, so do not paste real personal or
-patient data. *Show requests* renders everything that would be sent without sending it.
-
-Whether a browser may call the provider directly depends on that provider's cross-origin policy;
-if it refuses, the page says so, and the released code runs the same protocol offline.
-
-## Scope, and what this is not
-
-The browser runs the cue layer and a surface agreement pass. The released editor adds a binder
-that reads a dependency parse to decide whom each cue describes, and repairs agreement from that
-parse; neither can run in a browser, so the arms here are *global* ones and the non-person rule is
-the closest scope arm available. SACC's own releases are on the results page.
-
-De-identification in the page stands in for the tagger the released pipeline uses, and the
-occupation candidates are a demo set rather than the annotation strata. The misdirecting release
-is an evaluation construct, distributed as evaluation code and not as an anonymiser.
+The paper is under review; this repository will carry the citation once it is published.
