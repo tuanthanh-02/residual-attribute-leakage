@@ -5,7 +5,7 @@ Interactive companion to the paper
 > **Residual Attribute Leakage Is an Interface: Auditing Privacy Evaluation After Text
 > De-identification**
 
-**Demo: <https://duongtuanthanh9a2017.github.io/residual-attribute-leakage/>**
+**Demo: <https://tuanthanh-02.github.io/residual-attribute-leakage/>**
 
 A privacy verdict for a fixed de-identified text changes with how it is scored, who the scorer
 asks about, and which adversary reads it. This repository holds a two-page site that shows that
