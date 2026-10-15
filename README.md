@@ -54,8 +54,11 @@ the adversary row may contain reversals; closure must remain the largest ablatio
 editor must still edit the fewest characters on the unseen corpora; two of three judges must still
 fail their own control; and no string reaching the page may still contain LaTeX.
 
-It reads the paper source and the method package, so it runs in the research tree rather than
-here; it is included for provenance.
+It reads the paper source and the frozen method package, so it runs in the research tree rather
+than in a clone of this repository; it takes the output path as its first argument and is included
+here for provenance:
+
+    python make_demo_data.py /path/to/this/repo/data.json
 
 ## The seven protocol choices
 

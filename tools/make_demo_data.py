@@ -22,7 +22,9 @@ import sys
 SP = "/data_x/thanh/tam/spia"
 os.chdir(SP); sys.path.insert(0, SP)
 TEX = "/data_x/thanh/tam/sacc_eval.tex"
-OUT = "/data_x/thanh/tam/demo/data.json"
+# where the generated file goes; the default is the working copy of the site, and the
+# published repository passes its own path as the first argument
+OUT = sys.argv[1] if len(sys.argv) > 1 else "/data_x/thanh/tam/demo/data.json"
 
 
 def tex():
