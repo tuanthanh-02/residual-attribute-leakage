@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="app.css">
+<meta name="description" content="Run the paper's privacy-evaluation protocol on your own sentence.">
+<title>Analyse text — Leakage Interface Explorer</title>
+</head>
+<body data-page="analyse">
+<nav><div class="wrap">
+  <span class="brand">Leakage Interface</span>
+  <a href="index.html" data-s="results">Results</a>
+  <a href="analyse.html" data-s="analyse">Demo app</a>
+  <span class="sp"></span>
+  <button class="theme" id="theme" aria-label="Switch colour theme">Theme</button>
+</div></nav>
+<div class="wrap">
+<header class="hero-sm">
+  <p class="kicker">End to end</p>
+  <h1>Analyse your own sentence</h1>
+  <p class="tagline">Write one sentence about a person. The page works out which attribute it
+  states, what the value is, who the subject is and what kind of document it looks like, then
+  builds the releases and scores them with the protocol from the paper.</p>
+</header>
+
+<section data-n="1" data-rail="ink">
+  <p class="eyebrow">What you give it</p>
+  <h2>Your text</h2>
+  <p class="lede" style="margin-bottom:9px">Not sure what to write? Start from one of these.</p>
+  <div class="pills" id="samples"></div>
+  <textarea id="pText" spellcheck="false" aria-label="Your text">Ms. Carter is a 54-year-old patient. She came to the clinic with her husband, and the nurse recorded that she had been unwell for a week.</textarea>
+  <div class="chips" id="pGuess" data-ready>Reading the text…</div>
+  <details class="adj"><summary>What was worked out, and how to change it</summary><div class="body">
+    <label class="opt"><input type="checkbox" id="ovr">
+      <span>Let me set these myself. Leave it unticked and the page keeps reading them from the
+      text.</span></label>
+    <div class="grid2 tight">
+      <label class="fld"><span>Attribute</span><select id="pAttr" disabled>
+        <option value="SEX">Sex</option>
+        <option value="RELATIONSHIP">Relationship status</option>
+        <option value="OCCUPATION">Occupation</option></select></label>
+      <label class="fld"><span>True value</span><select id="pGold" disabled></select></label>
+      <label class="fld"><span>Subject's mention forms</span>
+        <input id="pSubject" spellcheck="false" disabled></label>
+      <label class="fld"><span>Domain phrase for the no-text question</span>
+        <input id="pDomain" spellcheck="false" disabled></label>
+    </div>
+    <p class="note" style="border:0;padding:0;margin:0">These four are filled in from the text, so
+    there is nothing to type. The true value is what the score is measured against, so it is the
+    one worth a glance.</p>
+  </div></details>
+</section>
+
+<section data-n="2" data-rail="grey">
+  <p class="eyebrow">What the editors write</p>
+  <h2>Releases built from it</h2>
+  <p class="lede">The de-identifier removes the names; the editors then act on the residual cues.
+  The last release writes the opposite-sex form exactly where the mask writes a placeholder.
+  Every arm leaves the shared keep-list alone — <code>patient</code> and <code>the court</code>
+  have no truthful broader term — and the <b>non-person rule</b> arm additionally keeps a cue that
+  names an institution rather than a person, which is why <code>clinic</code> survives there.</p>
+  <p class="lede"><b>Where SACC is.</b> These are <em>global</em> arms: they edit every lexicon
+  match, whoever it describes. SACC's first principle is closure, which needs a binder reading a
+  dependency parse to decide whom each cue describes, and that cannot run in a browser. The
+  non-person rule is the one scope rule that needs no parse, so it is the closest arm here. SACC's
+  own releases, and what closure contributes, are on the <a href="index.html">results page</a>.</p>
+  <div class="rels" id="pRel"></div>
+  <div id="pWarn"></div>
+  <p class="note" id="pRef" style="border:0;padding-top:10px"></p>
+</section>
+
+<section data-n="3" data-rail="blue">
+  <p class="eyebrow">What the adversary reads</p>
+  <h2>Ask the adversary</h2>
+  <p class="lede">The question, the single-token request and the renormalisation are the scorer's
+  own. Nothing is sent until you press Run, and <b id="pCalls">the request count</b> is shown
+  first.</p>
+  <ol class="proto">
+    <li><b>Prior</b> — the same question with no text, asked under both candidate orders, giving
+      π, the adversary's answer before it reads anything.</li>
+    <li><b>Posterior</b> — the question again with the release in front of it, giving p.</li>
+    <li><b>Read the first token</b> and keep the mass on the option letters, renormalised over
+      them. How that token is asked for depends on the model: <span id="pTop">the frozen payload,
+      one token at temperature 0 with the top 20 log-probabilities</span>.</li>
+    <li><b>Score</b> — <code>d = clip((p − π) / (1 − π), 0, 1)</code>, averaged over the orders.
+      The band is <code>δ = .05</code>: above π+δ is <b>Leak</b>, below π−δ is <b>Misled</b>,
+      between them <b>Anon</b>.</li>
+    <li><b>Eligibility</b> — if π is already past the register's threshold τ, the entry is
+      dropped: the text cannot add what the adversary assumes without it.</li>
+  </ol>
+  <details class="adj"><summary>See exactly what would be sent</summary>
+    <div class="body" id="pPrompts"></div></details>
+  <h3 class="step">Model and cost</h3>
+  <label class="fld"><span>Model</span><select id="pModel"></select></label>
+  <div id="mcap"></div>
+  <label class="opt"><input type="checkbox" id="ruleaware">
+    <span>Also ask a <b>rule-aware</b> adversary, told how the text was edited — the paper's
+    recovery test. Doubles the posterior calls, and the cost below follows.</span></label>
+  <div id="pCost"></div>
+  <label class="opt"><input type="checkbox" id="ovrRate">
+    <span>Use my own rates instead of the ones this project records for the model above.</span></label>
+  <div class="grid2 tight">
+    <label class="fld"><span>Input rate, USD per million tokens</span>
+      <input id="rIn" inputmode="decimal" disabled></label>
+    <label class="fld"><span>Output rate, USD per million tokens</span>
+      <input id="rOut" inputmode="decimal" disabled></label>
+  </div>
+
+  <div style="margin-top:14px">
+    <label class="fld"><span>OpenAI API key <em>— the only thing you need to type here</em></span>
+      <input id="pKey" type="password" autocomplete="off" placeholder="sk-…"></label>
+  </div>
+  <p class="note" id="pErr" style="color:var(--flag);border:0;padding-top:0"></p>
+  <div id="pOut"></div>
+  <p class="note"><b>Before you use a key.</b> It stays in this page, in memory, and is sent only
+  to the model provider; the page writes nothing to storage. A key typed into any web page is
+  readable by that page, so use a restricted key and revoke it afterwards. Your text is sent to
+  the provider, so do not paste real personal or patient data. De-identification here stands in
+  for the tagger the released pipeline uses, and the occupation candidates are a demo set rather
+  than the annotation strata.</p>
+  <div class="runbar">
+    <button id="pRun" type="button">Run the adversary</button>
+    <span class="count" id="pStatus"></span>
+  </div>
+</section>
+
+<section data-n="4" data-rail="flag">
+  <p class="eyebrow">The rules, by hand</p>
+  <h2>The cue layer on its own</h2>
+  <p class="lede">The frozen lexicons and the rewrite and flip tables, one operation at a time, on
+  the same passage you entered above. Editing either box changes both, so what you read here is
+  always the text the run would score.</p>
+  <textarea id="inp" spellcheck="false" aria-label="Cue layer input"></textarea>
+  <div class="toolbar"><div id="ops"></div>
+    <button id="copy" type="button">Copy output</button>
+    <span class="count" id="cnt"></span></div>
+  <p class="cuerule" id="cuerule"></p>
+  <pre id="out"></pre>
+  <p class="note" id="cuemiss" style="margin-top:10px"></p>
+  <div class="cuekey">
+    <span><i class="sw find"></i>a lexicon match</span>
+    <span><i class="sw red"></i>redacted</span>
+    <span><i class="sw neu"></i>generalised</span>
+    <span><i class="sw flip"></i>flipped to the opposite value</span>
+  </div>
+  <p class="note">This is the cue layer with a surface agreement pass. The released editor adds a
+  binder that reads a dependency parse to decide whom each cue describes, and repairs agreement
+  from that same parse; both run offline, on CPU, with no model call.</p>
+</section>
+
+<footer id="prov"></footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

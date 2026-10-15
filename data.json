@@ -1,0 +1,843 @@
+{
+ "source": "parsed from sacc_eval.tex; cue layer from the frozen editor code",
+ "title": "Residual Attribute Leakage Is an Interface",
+ "abstract_words": 200,
+ "x1_medqa": [
+  {
+   "system": "SWAP (flips sex cues)",
+   "L": 0.536,
+   "leak": 0.564,
+   "disc": 0.979,
+   "auc": 0.18,
+   "rk": 6
+  },
+  {
+   "system": "Adaptive",
+   "L": 0.581,
+   "leak": 0.704,
+   "disc": 0.897,
+   "auc": 0.734,
+   "rk": 3
+  },
+  {
+   "system": "Global ladder",
+   "L": 0.628,
+   "leak": 0.723,
+   "disc": 0.898,
+   "auc": 0.719,
+   "rk": 1
+  },
+  {
+   "system": "SACC",
+   "L": 0.636,
+   "leak": 0.728,
+   "disc": 0.901,
+   "auc": 0.719,
+   "rk": 1
+  },
+  {
+   "system": "Global mask",
+   "L": 0.653,
+   "leak": 0.741,
+   "disc": 0.931,
+   "auc": 0.737,
+   "rk": 4
+  },
+  {
+   "system": "SACC-mask",
+   "L": 0.659,
+   "leak": 0.749,
+   "disc": 0.937,
+   "auc": 0.739,
+   "rk": 5
+  },
+  {
+   "system": "Anonymised input",
+   "L": 0.842,
+   "leak": 0.871,
+   "disc": 0.99,
+   "auc": 0.888,
+   "rk": 7
+  },
+  {
+   "system": "INTACT",
+   "L": 0.853,
+   "leak": 0.879,
+   "disc": 0.991,
+   "auc": 0.955,
+   "rk": 8
+  }
+ ],
+ "x1_tab": [
+  {
+   "system": "SWAP (flips sex cues)",
+   "L": 0.444,
+   "leak": 0.534,
+   "disc": 0.859
+  },
+  {
+   "system": "Adaptive",
+   "L": 0.618,
+   "leak": 0.677,
+   "disc": 0.892
+  },
+  {
+   "system": "Global ladder",
+   "L": 0.408,
+   "leak": 0.603,
+   "disc": 0.8
+  },
+  {
+   "system": "SACC",
+   "L": 0.423,
+   "leak": 0.599,
+   "disc": 0.792
+  },
+  {
+   "system": "Global mask",
+   "L": 0.444,
+   "leak": 0.634,
+   "disc": 0.848
+  },
+  {
+   "system": "SACC-mask",
+   "L": 0.446,
+   "leak": 0.62,
+   "disc": 0.817
+  },
+  {
+   "system": "Anonymised input",
+   "L": 0.556,
+   "leak": 0.642,
+   "disc": 0.867
+  },
+  {
+   "system": "INTACT",
+   "L": 0.576,
+   "leak": 0.661,
+   "disc": 0.885
+  }
+ ],
+ "readings": [
+  {
+   "reading": "L",
+   "uses_prior": true,
+   "better_when": "lower",
+   "swap": 0.241,
+   "saccmask": 0.495,
+   "rank_medqa": 1,
+   "rank_tab": 4
+  },
+  {
+   "reading": "Signed residual",
+   "uses_prior": true,
+   "better_when": "lower",
+   "swap": -0.608,
+   "saccmask": 0.285,
+   "rank_medqa": 1,
+   "rank_tab": 1
+  },
+  {
+   "reading": "Leaking",
+   "uses_prior": true,
+   "better_when": "lower",
+   "swap": 0.252,
+   "saccmask": 0.626,
+   "rank_medqa": 1,
+   "rank_tab": 1
+  },
+  {
+   "reading": "Attack accuracy",
+   "uses_prior": false,
+   "better_when": "lower",
+   "swap": 0.258,
+   "saccmask": 0.676,
+   "rank_medqa": 1,
+   "rank_tab": 1
+  },
+  {
+   "reading": "Brier score",
+   "uses_prior": false,
+   "better_when": "higher",
+   "swap": 0.723,
+   "saccmask": 0.242,
+   "rank_medqa": 1,
+   "rank_tab": 1
+  },
+  {
+   "reading": "Log loss",
+   "uses_prior": false,
+   "better_when": "higher",
+   "swap": 14.51,
+   "saccmask": 1.33,
+   "rank_medqa": 1,
+   "rank_tab": 1
+  },
+  {
+   "reading": "Disclosing",
+   "uses_prior": true,
+   "better_when": "lower",
+   "swap": 0.98,
+   "saccmask": 0.897,
+   "rank_medqa": 6,
+   "rank_tab": 5
+  },
+  {
+   "reading": "|AUC-.5|",
+   "uses_prior": false,
+   "better_when": "lower",
+   "swap": 0.32,
+   "saccmask": 0.237,
+   "rank_medqa": 6,
+   "rank_tab": 5
+  }
+ ],
+ "choices": [
+  {
+   "choice": "Wrong-belief credit",
+   "reversals": 0,
+   "gained": 1,
+   "lost": 10,
+   "n": 84,
+   "changed": 11,
+   "median_abs_dL": 0.0084
+  },
+  {
+   "choice": "Subject reference",
+   "reversals": 0,
+   "gained": 0,
+   "lost": 3,
+   "n": 45,
+   "changed": 3,
+   "median_abs_dL": 0.0003
+  },
+  {
+   "choice": "Candidate order",
+   "reversals": 0,
+   "gained": 7,
+   "lost": 6,
+   "n": 252,
+   "changed": 13,
+   "median_abs_dL": null
+  },
+  {
+   "choice": "Which subject is read",
+   "reversals": 0,
+   "gained": 3,
+   "lost": 1,
+   "n": 28,
+   "changed": 4,
+   "median_abs_dL": null
+  },
+  {
+   "choice": "Adversary family",
+   "reversals": 5,
+   "gained": 34,
+   "lost": 85,
+   "n": 504,
+   "changed": 124,
+   "median_abs_dL": 0.0236
+  },
+  {
+   "choice": "Abstention",
+   "reversals": 0,
+   "gained": 4,
+   "lost": 2,
+   "n": 75,
+   "changed": 6,
+   "median_abs_dL": 0.0059
+  }
+ ],
+ "protocol": [
+  {
+   "choice": "Wrong-belief credit",
+   "reading": "Clipping floors negative changes in gold-value confidence at zero leakage",
+   "alternative": "Signed residual; three outcome states with Leaking and Disclosing",
+   "effect": {
+    "choice": "Wrong-belief credit",
+    "reversals": 0,
+    "gained": 1,
+    "lost": 10,
+    "n": 84,
+    "changed": 11,
+    "median_abs_dL": 0.0084
+   }
+  },
+  {
+   "choice": "Subject reference",
+   "reading": "References depend on each editor's output",
+   "alternative": "Match references across editors or derive one from the input",
+   "effect": {
+    "choice": "Subject reference",
+    "reversals": 0,
+    "gained": 0,
+    "lost": 3,
+    "n": 45,
+    "changed": 3,
+    "median_abs_dL": 0.0003
+   }
+  },
+  {
+   "choice": "Candidate order",
+   "reading": "Seeded orders retain a positional bias in \u03c0",
+   "alternative": "Balance gold-first and gold-second orders for Sex; report AUC alongside L",
+   "effect": {
+    "choice": "Candidate order",
+    "reversals": 0,
+    "gained": 7,
+    "lost": 6,
+    "n": 252,
+    "changed": 13,
+    "median_abs_dL": null
+   }
+  },
+  {
+   "choice": "Which subject is read",
+   "reading": "Aggregate all annotated subjects",
+   "alternative": "Split by subject position and exclude shared references",
+   "effect": {
+    "choice": "Which subject is read",
+    "reversals": 0,
+    "gained": 3,
+    "lost": 1,
+    "n": 28,
+    "changed": 4,
+    "median_abs_dL": null
+   }
+  },
+  {
+   "choice": "Content proxies",
+   "reading": "Accept U_nli, TPS and LLM judgments without validity checks",
+   "alternative": "Check placeholder effects, a second encoder and judgments on the anonymised input",
+   "effect": null
+  },
+  {
+   "choice": "Adversary family",
+   "reading": "Evaluate with one development adversary",
+   "alternative": "Compare three model families and consider the worst case",
+   "effect": {
+    "choice": "Adversary family",
+    "reversals": 5,
+    "gained": 34,
+    "lost": 85,
+    "n": 504,
+    "changed": 124,
+    "median_abs_dL": 0.0236
+   }
+  },
+  {
+   "choice": "Abstention",
+   "reading": "Declined answers are dropped or assigned the prior without an explicit rule",
+   "alternative": "State the convention and report both readings",
+   "effect": {
+    "choice": "Abstention",
+    "reversals": 0,
+    "gained": 4,
+    "lost": 2,
+    "n": 75,
+    "changed": 6,
+    "median_abs_dL": 0.0059
+   }
+  }
+ ],
+ "example": [
+  {
+   "system": "Anonymised input",
+   "html": "A 35-year-old [SEX] comes to the [OCCUPATION] for genetic counseling prior to conception. Her younger brother has mild developmental delay, pale complexion, and has to limit his dietary intake of phenylalanine. She has no similar symptoms and is in good health. Her parents are healthy. Which of the following is the most appropriate assessment of her [OCCUPATION] status for the disease affecting her brother?"
+  },
+  {
+   "system": "Global mask",
+   "html": "A 35-year-old [SEX] comes to the [OCCUPATION] for genetic counseling prior to conception. <mark>[REDACTED]</mark> younger <mark>[REDACTED]</mark> has mild developmental delay, pale complexion, and has to limit <mark>[REDACTED]</mark> dietary intake of phenylalanine. <mark>[REDACTED]</mark> has no similar symptoms and is in good health. <mark>[REDACTED]</mark> parents are healthy. Which of the following is the most appropriate assessment of <mark>[REDACTED]</mark> [OCCUPATION] status for the disease affecting <mark>[REDACTED]</mark> <mark>[REDACTED]?</mark>"
+  },
+  {
+   "system": "Global ladder",
+   "html": "A 35-year-old [SEX] comes to the [OCCUPATION] for genetic counseling prior to conception. <mark>Their</mark> younger <mark>sibling</mark> has mild developmental delay, pale complexion, and has to limit <mark>their</mark> dietary intake of phenylalanine. <mark>They</mark> <mark>have</mark> no similar symptoms and is in good health. <mark>Their</mark> parents are healthy. Which of the following is the most appropriate assessment of <mark>their</mark> [OCCUPATION] status for the disease affecting <mark>their</mark> <mark>sibling?</mark>"
+  },
+  {
+   "system": "SACC-mask",
+   "html": "A 35-year-old [SEX] comes to the [OCCUPATION] for genetic counseling prior to conception. <mark>[REDACTED]</mark> younger <mark>[REDACTED]</mark> has mild developmental delay, pale complexion, and has to limit <mark>[REDACTED]</mark> dietary intake of phenylalanine. <mark>[REDACTED]</mark> has no similar symptoms and is in good health. <mark>[REDACTED]</mark> parents are healthy. Which of the following is the most appropriate assessment of <mark>[REDACTED]</mark> [OCCUPATION] status for the disease affecting <mark>[REDACTED]</mark> <mark>[REDACTED]?</mark>"
+  },
+  {
+   "system": "SACC",
+   "html": "A 35-year-old [SEX] comes to the [OCCUPATION] for genetic counseling prior to conception. <mark>Their</mark> younger <mark>sibling</mark> has mild developmental delay, pale complexion, and has to limit <mark>their</mark> dietary intake of phenylalanine. <mark>They</mark> <mark>have</mark> no similar symptoms and <mark>are</mark> in good health. <mark>Their</mark> parents are healthy. Which of the following is the most appropriate assessment of <mark>their</mark> [OCCUPATION] status for the disease affecting <mark>their</mark> <mark>sibling?</mark>"
+  },
+  {
+   "system": "LLM rewrite",
+   "html": "A <mark>[REDACTED]</mark> [SEX] comes to the [OCCUPATION] for genetic counseling prior to conception. <mark>[REDACTED]</mark> younger brother has mild developmental delay, pale complexion, and has to limit <mark>[REDACTED]</mark> dietary intake of phenylalanine. <mark>[REDACTED]</mark> has no similar symptoms and is in good health. <mark>[REDACTED]</mark> parents are healthy. Which of the following is the most appropriate assessment of <mark>[REDACTED]</mark> [OCCUPATION] status for the disease affecting <mark>[REDACTED]</mark> brother?"
+  }
+ ],
+ "rule_aware": {
+  "entries": 1513,
+  "p_untold": 0.252,
+  "p_told": 0.769,
+  "dL": 0.414,
+  "ci": [
+   0.374,
+   0.454
+  ],
+  "found_in_tex": true
+ },
+ "ablation": [
+  {
+   "change": "Closure over binding only",
+   "at": "rewrite",
+   "dL_medqa": 0.079,
+   "dU_medqa": 0.002,
+   "dL_tab": 0.122,
+   "dU_tab": 0.002
+  },
+  {
+   "change": "Admissible rewriting",
+   "at": "closure",
+   "dL_medqa": 0.024,
+   "dU_medqa": 0.041,
+   "dL_tab": 0.022,
+   "dU_tab": 0.0
+  },
+  {
+   "change": "Closure selection",
+   "at": "rewrite",
+   "dL_medqa": -0.01,
+   "dU_medqa": 0.0,
+   "dL_tab": 0.001,
+   "dU_tab": 0.026
+  },
+  {
+   "change": "non-person rule",
+   "at": "mask",
+   "dL_medqa": -0.006,
+   "dU_medqa": 0.004,
+   "dL_tab": -0.011,
+   "dU_tab": 0.026
+  },
+  {
+   "change": "other-person rule",
+   "at": "mask",
+   "dL_medqa": 0.0,
+   "dU_medqa": -0.001,
+   "dL_tab": 0.009,
+   "dU_tab": 0.002
+  }
+ ],
+ "increment": [
+  {
+   "corpus": "MedQA",
+   "gpt4omini": 0.024,
+   "llama": 0.0,
+   "qwen": 0.009
+  },
+  {
+   "corpus": "TAB",
+   "gpt4omini": 0.022,
+   "llama": -0.023,
+   "qwen": 0.042
+  }
+ ],
+ "unseen": [
+  {
+   "system": "Anonymised input",
+   "bio_L": 0.877,
+   "bio_disc": 0.963,
+   "bio_edit": 0.0,
+   "plot_L": 0.577,
+   "plot_disc": 0.972,
+   "plot_edit": 0.0
+  },
+  {
+   "system": "Global mask",
+   "bio_L": 0.512,
+   "bio_disc": 0.792,
+   "bio_edit": 3.3,
+   "plot_L": 0.481,
+   "plot_disc": 0.923,
+   "plot_edit": 5.3
+  },
+  {
+   "system": "Global ladder",
+   "bio_L": 0.496,
+   "bio_disc": 0.763,
+   "bio_edit": 1.9,
+   "plot_L": 0.382,
+   "plot_disc": 0.797,
+   "plot_edit": 2.8
+  },
+  {
+   "system": "SACC-mask",
+   "bio_L": 0.542,
+   "bio_disc": 0.804,
+   "bio_edit": 2.5,
+   "plot_L": 0.508,
+   "plot_disc": 0.951,
+   "plot_edit": 3.3
+  },
+  {
+   "system": "SACC",
+   "bio_L": 0.526,
+   "bio_disc": 0.782,
+   "bio_edit": 1.6,
+   "plot_L": 0.471,
+   "plot_disc": 0.893,
+   "plot_edit": 1.6
+  }
+ ],
+ "human": [
+  {
+   "system": "SACC-mask",
+   "facts": 1.9,
+   "grammar": 3.0
+  },
+  {
+   "system": "SACC",
+   "facts": 1.94,
+   "grammar": 2.88
+  },
+  {
+   "system": "Global ladder",
+   "facts": 1.7,
+   "grammar": 2.45
+  },
+  {
+   "system": "SACC \u2212 global ladder",
+   "facts": 0.24,
+   "grammar": 0.43
+  },
+  {
+   "system": "SACC \u2212 SACC-mask",
+   "facts": 0.04,
+   "grammar": -0.12
+  }
+ ],
+ "task": [
+  {
+   "text": "Source text",
+   "accuracy": 0.741
+  },
+  {
+   "text": "Anonymised input",
+   "accuracy": 0.73
+  },
+  {
+   "text": "Global mask",
+   "accuracy": 0.728
+  },
+  {
+   "text": "Global ladder",
+   "accuracy": 0.729
+  },
+  {
+   "text": "SACC-mask",
+   "accuracy": 0.727
+  },
+  {
+   "text": "SACC",
+   "accuracy": 0.73
+  },
+  {
+   "text": "LLM rewrite",
+   "accuracy": 0.721
+  },
+  {
+   "text": "Question only",
+   "accuracy": 0.428
+  }
+ ],
+ "judges": [
+  {
+   "judge": "GPT-4.1 (primary)",
+   "facts_input": 0.665,
+   "facts_mask": 0.566,
+   "facts_sacc": 0.624,
+   "fault_input": 0.032,
+   "fault_mask": 0.044,
+   "fault_sacc": 0.016,
+   "control": "fails G1"
+  },
+  {
+   "judge": "GPT-4o-mini",
+   "facts_input": 0.905,
+   "facts_mask": 0.876,
+   "facts_sacc": 0.84,
+   "fault_input": 0.241,
+   "fault_mask": 0.121,
+   "fault_sacc": 0.257,
+   "control": "fails G2"
+  },
+  {
+   "judge": "Qwen3-30B-A3B",
+   "facts_input": 0.873,
+   "facts_mask": 0.801,
+   "facts_sacc": 0.816,
+   "fault_input": 0.195,
+   "fault_mask": 0.18,
+   "fault_sacc": 0.288,
+   "control": "passes"
+  }
+ ],
+ "subjectpos": [
+  {
+   "system": "Anonymised input",
+   "auc_first_named": 0.979,
+   "auc_others": 0.32
+  },
+  {
+   "system": "Global mask",
+   "auc_first_named": 0.668,
+   "auc_others": 0.425
+  },
+  {
+   "system": "Global ladder",
+   "auc_first_named": 0.592,
+   "auc_others": 0.375
+  },
+  {
+   "system": "SACC-mask",
+   "auc_first_named": 0.666,
+   "auc_others": 0.425
+  },
+  {
+   "system": "SACC",
+   "auc_first_named": 0.616,
+   "auc_others": 0.378
+  }
+ ],
+ "checklist": [
+  {
+   "what": "Score",
+   "do": "report L with two-sided displacement and, where applicable, AUC, and explain any disagreement (e.g., SWAP, Table tab:x1 ); where an editor's rule is public, run a rule-aware adversary too."
+  },
+  {
+   "what": "Reference and cohort",
+   "do": "give paraphrasing and in-place editors the same reference, and report first-named and other subjects separately."
+  },
+  {
+   "what": "Adversary and abstention",
+   "do": "report every adversary used, including any that reverses a result, say whether it knows the editing rule, and report both conventions for declined answers."
+  },
+  {
+   "what": "Uncertainty and content",
+   "do": "separate reversals from changes in separability, give each non-separable comparison's minimum detectable difference, and validate content measures."
+  }
+ ],
+ "cue": {
+  "lexicon": {
+   "pronoun": "\\b(he|she|him|her|hers|his|himself|herself|man|woman|men|women|male|female|boy|girl|gentleman|lady|mother|father)\\b",
+   "title": "\\b(Mr|Mrs|Ms|Miss)\\.?(?=\\s)",
+   "gendered_kin": "\\b(husband|wife|widow(?:er)?|father|mother|son|daughter|brother|sister)\\b",
+   "kinship": "\\b(wife|husband|spouse|widow(?:er)?|married|marriage|divorced?|partner|fianc[e\u00e9]e?|the couple|wedding)\\b",
+   "occ_role": "\\b(lawyer|solicitor|barrister|attorney|judge|prosecutor|notary|magistrate|law firm|the court|chambers|legal (?:practice|profession|adviser)|doctor|physician|nurse|surgeon|hospital|clinic|patient[s]? of|teacher|professor|school|university|engineer|company|business(?:man|woman)?|farm(?:er)?|unemploy(?:ed|ment)|pension(?:er)?|retire[dment]*|police|military|army|officer|minister|government|diplomat|politician|journalist|represent(?:ed|ing) (?:the|his|her|a)|patient|physician|resident|attending|intern|pharmacist|technician|therapist|paramedic|surgeon|midwife)\\b"
+  },
+  "institution": [
+   "agency",
+   "army",
+   "bank",
+   "chambers",
+   "clinic",
+   "college",
+   "company",
+   "council",
+   "court",
+   "department",
+   "embassy",
+   "firm",
+   "government",
+   "hospital",
+   "institution",
+   "military",
+   "ministry",
+   "office",
+   "police",
+   "practice",
+   "prison",
+   "school",
+   "tribunal",
+   "university",
+   "ward",
+   "workplace"
+  ],
+  "keep": "^(the court|court|patient|patients|at work|day job|my (job|career|clients|patients|students|colleagues|boss|office|shift|company)|i work (as|at|in)|as a laser)$",
+  "pricing": {
+   "usd_per_prompt_token": 1.5e-07,
+   "usd_per_completion_token": 6e-07,
+   "measured_usd": 0.4287,
+   "measured_requests": 19840,
+   "note": "the project's own rates for the development adversary; check them against the provider's current price list before trusting the total"
+  },
+  "pronoun_map": {
+   "he": "they",
+   "she": "they",
+   "him": "them",
+   "her": "them",
+   "his": "their",
+   "hers": "theirs",
+   "himself": "themselves",
+   "herself": "themselves"
+  },
+  "titles": [
+   "miss",
+   "mr",
+   "mr.",
+   "mrs",
+   "mrs.",
+   "ms",
+   "ms."
+  ],
+  "swap": {
+   "he": "she",
+   "she": "he",
+   "him": "her",
+   "himself": "herself",
+   "herself": "himself",
+   "hers": "his",
+   "mother": "father",
+   "father": "mother",
+   "daughter": "son",
+   "son": "daughter",
+   "wife": "husband",
+   "husband": "wife",
+   "brother": "sister",
+   "sister": "brother",
+   "widow": "widower",
+   "widower": "widow",
+   "miss": "Mr"
+  },
+  "kin_neutral": {
+   "husband": "spouse",
+   "wife": "spouse",
+   "widow": "bereaved spouse",
+   "widower": "bereaved spouse",
+   "father": "parent",
+   "mother": "parent",
+   "son": "child",
+   "daughter": "child",
+   "brother": "sibling",
+   "sister": "sibling"
+  },
+  "her_objective_next": [
+   "a",
+   "about",
+   "an",
+   "and",
+   "as",
+   "at",
+   "by",
+   "for",
+   "from",
+   "had",
+   "has",
+   "in",
+   "into",
+   "is",
+   "of",
+   "on",
+   "or",
+   "that",
+   "the",
+   "to",
+   "was",
+   "with"
+  ],
+  "note": "These are the frozen MedQA lexicons and the rewrite and flip tables the paper prints. Two steps are missing on purpose: the binder, which decides whom a cue describes from a dependency parse, and the agreement repair, the method's one tuned setting, which also needs the parse -- so a verb after a rewritten pronoun is left unrepaired here"
+ },
+ "models": {
+  "list": [
+   {
+    "id": "gpt-4o-mini",
+    "tag": "recommended",
+    "role": "the paper's development adversary",
+    "in": 0.15,
+    "out": 0.6,
+    "price_src": "scripts/dev_eval_review2.py",
+    "transport": "frozen",
+    "top_logprobs": 20,
+    "out_per_call": 1,
+    "max_options": 8,
+    "measured_usd": 0.4287,
+    "measured_requests": 19840,
+    "cap_src": "runs/dev/luna_smoke/smoke_gpt5line.json (control_works)",
+    "cap": "the frozen payload works as it stands"
+   },
+   {
+    "id": "gpt-4.1-mini",
+    "tag": "",
+    "role": "a confirmation adversary in the paper",
+    "in": 0.4,
+    "out": 1.6,
+    "price_src": "scripts/dev_sacc_binder_audit.py",
+    "transport": "frozen",
+    "top_logprobs": 20,
+    "out_per_call": 1,
+    "max_options": 8,
+    "measured_usd": null,
+    "cap_src": "runs/dev/sacc_family4/, runs/dev/sacc_reasoning/",
+    "cap": "the frozen payload works as it stands"
+   },
+   {
+    "id": "gpt-5.4-nano",
+    "tag": "",
+    "role": "the cheapest that can drive the protocol",
+    "in": 0.2,
+    "out": 1.25,
+    "price_src": "scripts/dev_gpt5line_sex.py",
+    "transport": "top5",
+    "top_logprobs": 5,
+    "out_per_call": 4.0,
+    "max_options": 2,
+    "measured_usd": 1.2244,
+    "measured_requests": 87208,
+    "one_letter_rate": 0.4399,
+    "cap_src": "runs/dev/luna_smoke/smoke_gpt51_gpt52_gpt54nano.json; runs/dev/sacc_gpt5line/",
+    "cap": "needs its own payload; a full pass has been run on it"
+   },
+   {
+    "id": "gpt-5.1",
+    "tag": "",
+    "role": "usable, 17\u00d7 the output rate",
+    "in": 1.25,
+    "out": 10.0,
+    "price_src": "scripts/dev_gpt5line_sex.py",
+    "transport": "top5",
+    "top_logprobs": 5,
+    "out_per_call": 4.0,
+    "max_options": 2,
+    "measured_usd": null,
+    "cap_src": "runs/dev/luna_smoke/smoke_gpt51_gpt52_gpt54nano.json",
+    "cap": "needs its own payload; smoke-tested only"
+   },
+   {
+    "id": "gpt-5.2",
+    "tag": "",
+    "role": "the dearest here, 23\u00d7 the output rate",
+    "in": 1.75,
+    "out": 14.0,
+    "price_src": "scripts/dev_gpt5line_sex.py",
+    "transport": "top5",
+    "top_logprobs": 5,
+    "out_per_call": 4.0,
+    "max_options": 2,
+    "measured_usd": null,
+    "cap_src": "runs/dev/luna_smoke/smoke_gpt51_gpt52_gpt54nano.json",
+    "cap": "needs its own payload; smoke-tested only"
+   }
+  ],
+  "census": {
+   "n_ids": 41,
+   "counts": {
+    "no_logprobs": 16,
+    "deprecated": 9,
+    "wrong_api": 8,
+    "usable": 3,
+    "untested": 5
+   },
+   "untested": [
+    "gpt-5.1-2025-11-13",
+    "gpt-5.2-2025-12-11",
+    "gpt-5.4",
+    "gpt-5.4-mini",
+    "gpt-5.4-nano-2026-03-17"
+   ],
+   "src": "runs/dev/luna_smoke/",
+   "note": "41 model IDs, the GPT-5 line and the 5.6 tiers, probed once each for less than 0.01 USD. Reasoning-first models refuse log-probabilities outright; the pro tiers answer only on a different endpoint. Five IDs are listed as untested because they were rejected by our own top_logprobs: 20 and never retried at 5 -- the same mistake that first hid three usable models."
+  },
+  "note": "Prices are the constants this project's estimators use, in USD per million tokens; check them against the provider's current price list before trusting a total. Capability is measured, and it decides the menu: a model that will not return log-probabilities cannot run this protocol at any price."
+ }
+}

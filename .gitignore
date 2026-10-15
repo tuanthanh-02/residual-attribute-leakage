@@ -1,0 +1,16 @@
+# nothing here is generated at serve time; these are the things that creep in
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+node_modules/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*.orig
+*.swp
+*~
+.env
+*.log
