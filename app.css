@@ -401,3 +401,15 @@ section[data-rail="ok"]{--rail:var(--ok)}
   section[data-n]::before{left:18px;top:12px;font-size:1.6rem}
   section[data-n]::after{display:none}
 }
+
+/* the first-time reader's primer: a line when closed, a short page when open */
+details.primer{margin:18px 0 0;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--panel);padding:0 16px}
+details.primer>summary{padding:12px 0;font-size:.84rem;color:var(--accent);font-weight:600}
+details.primer .body{padding:4px 0 14px;max-width:72ch}
+details.primer .body p{margin:0 0 11px;font-size:.92rem;color:var(--dim);line-height:1.6}
+details.primer .body pre.mini{margin:0 0 11px;font-size:12.5px}
+details.primer table.spec{margin-top:14px}
+details.primer table.spec th{color:var(--ink);font-family:var(--mono);text-transform:none;
+  letter-spacing:0;font-size:.78rem;width:8.5em}
+details.primer table.spec td{height:auto}

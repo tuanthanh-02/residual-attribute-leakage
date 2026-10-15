@@ -15,6 +15,43 @@ Each verdict depends on an **evaluation interface**: the queried person, the ans
 prior, the adversary model and the scoring rule. We vary those on fixed releases of three corpora
 and ask whether the verdict survives.
 
+## The problem, in one example
+
+A hospital wants to release a case note, so it removes the name:
+
+> `[PERSON] is a 54-year-old patient. **She** came to the clinic with **her husband**.`
+
+The name is gone. The sex is not. *She* and *her husband* still state it, and a language model
+asked "what is this person's sex?" answers correctly with near-certainty. Those leftover words are
+**residual cues**, and what they give away is **residual attribute leakage**. Measuring it is what
+this line of work does: you hand a model the released text, ask it about a person, and see how
+much more confident it becomes about something it was not supposed to learn.
+
+Now consider an editor that does not delete those words but **swaps** them:
+
+> `[PERSON] is a 54-year-old patient. **He** came to the clinic with **his wife**.`
+
+The reader is now confidently *wrong*. Is that privacy? Under a score that only asks how confident
+the reader is in the **true** value, it looks like the best protection of the lot — better than
+deleting the words, because a reader who believes a falsehood has no confidence left in the truth.
+Nothing was hidden; the reader was misdirected, and a rule anyone can guess undoes it.
+
+That is the failure this paper is about, and the rest follows from it: if a privacy number can be
+won by lying rather than by removing, what else does that number depend on?
+
+## Terms used here
+
+| term | what it means |
+|---|---|
+| **de-identification** | removing direct identifiers — names, dates, places — from a document |
+| **residual cue** | a word left behind that still states a protected attribute, such as *she* or *her husband* |
+| **release** | one version of the document after some editor has acted on it; the paper compares eight |
+| **adversary** | the language model that is asked to guess the attribute; it stands in for whoever might read the released text |
+| **prior (π)** | how well the adversary guesses with *no text at all* — the baseline it must beat before the text can be blamed |
+| **leakage (L)** | how much the text raised the adversary's confidence in the true value, above the prior, floored at zero |
+| **entry** | one person paired with one attribute, for example *this patient × sex*; the unit everything is counted over |
+| **protocol** | the choices that turn those pieces into a number: who is asked about, which options are offered, which model reads, how the score is computed |
+
 ## What the paper shows
 
 **A clipped leakage score rewards misdirection.** SWAP, a deliberately invertible counterexample,

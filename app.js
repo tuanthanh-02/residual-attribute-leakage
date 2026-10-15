@@ -865,10 +865,16 @@ function result(P, pri, rows, diag) {
     </div>
     ${banner}${inertNote}
     <table><thead><tr>
-      <th>Release</th><th class="n">p(true)</th><th class="n">Δp vs input</th>
-      <th class="n">L ↓</th><th class="n">signed d ↓</th><th>State</th>
-      <th class="n">Accuracy ↓</th><th class="n">Protection ↑</th>
-      <th class="n">Brier ↑</th><th class="n">Log loss ↑</th>
+      <th title="Which version of the text the adversary was shown">Release</th>
+      <th class="n" title="How much probability the adversary put on the true value after reading this release. Higher means it is more sure of the truth.">p(true)</th>
+      <th class="n" title="The same number minus the anonymised input's, so you can see what this editor changed">Δp vs input</th>
+      <th class="n" title="Leakage: how far p rose above the no-text prior, as a share of the room available, floored at zero. Lower is better.">L ↓</th>
+      <th class="n" title="The same quantity without the floor, so a fall below the prior shows as a negative number">signed d ↓</th>
+      <th title="Leaking: above the prior by more than the band. Misled: below it by more than the band. Anon: inside the band.">State</th>
+      <th class="n" title="1 if the adversary's top answer was the true value, 0 otherwise">Accuracy ↓</th>
+      <th class="n" title="1 minus accuracy, the share of the time the adversary was wrong">Protection ↑</th>
+      <th class="n" title="A proper scoring rule on the true value: the squared distance between p and 1. Higher means the adversary did worse.">Brier ↑</th>
+      <th class="n" title="The adversary's surprise at the true value, in nats. Higher means the adversary did worse.">Log loss ↑</th>
       </tr></thead><tbody>${rows.map((r, i) => `
       <tr${r.flag ? ' style="background:var(--flag-soft)"' : ""}>
         <td><b>${esc(r.name)}</b></td>
@@ -1089,6 +1095,42 @@ function renderCost(P) {
     </div></details>`;
 }
 
+/* ------------------------------------------------- an on-ramp for a first-time reader
+   Both pages assume a vocabulary: adversary, prior, leakage, release. A reader who has not met
+   those words cannot tell whether a number is good news. This is the same primer on both pages,
+   closed by default so it costs a returning reader one line. */
+function primer() {
+  const host = $("#primer"); if (!host) return;
+  host.innerHTML = `<details class="adj primer"><summary>New to this? Start here</summary>
+    <div class="body">
+      <p>A hospital wants to release a case note, so it removes the name:</p>
+      <pre class="mini">[PERSON] is a 54-year-old patient. <mark>She</mark> came to the clinic
+with <mark>her husband</mark>.</pre>
+      <p>The name is gone; the sex is not. <i>She</i> and <i>her husband</i> still state it, and a
+      language model asked <i>“what is this person's sex?”</i> answers correctly with
+      near-certainty. Those leftover words are <b>residual cues</b>, and what they give away is
+      <b>residual attribute leakage</b>. To measure it you hand the model the released text, ask
+      it about a person, and see how much more confident it becomes about something it was not
+      meant to learn.</p>
+      <p>Now an editor that does not delete those words but <b>swaps</b> them:</p>
+      <pre class="mini">[PERSON] is a 54-year-old patient. <mark>He</mark> came to the clinic
+with <mark>his wife</mark>.</pre>
+      <p>The reader is now confidently <i>wrong</i>. Is that privacy? Under a score that asks only
+      how confident the reader is in the <b>true</b> value, it looks like the best protection of
+      the lot — better than deleting the words. Nothing was hidden; the reader was misdirected,
+      and a rule anyone can guess undoes it. That failure is what this work is about.</p>
+      <table class="spec"><tbody>
+        ${[["release", "one version of the document after an editor has acted on it"],
+           ["adversary", "the model asked to guess; it stands in for whoever reads the release"],
+           ["prior, \u03c0", "how well it guesses with no text at all — the baseline to beat"],
+           ["leakage, L", "how much the text raised its confidence in the true value, above the prior, floored at zero"],
+           ["the band", "\u00b1.05 around the prior: above it <b>Leaking</b>, below it <b>Misled</b>, inside it <b>Anon</b>"],
+           ["entry", "one person paired with one attribute, the unit everything is counted over"]]
+          .map(([k, v]) => `<tr><th>${k}</th><td class="w" colspan="2">${v}</td></tr>`).join("")}
+      </tbody></table>
+    </div></details>`;
+}
+
 /* ---------------------------------------------------- per-page wiring */
 const PAGES = {
   results() {
@@ -1170,6 +1212,7 @@ fetch("data.json").then(r => r.json()).then(d => {
   const page = document.body.dataset.page;
   document.querySelectorAll("nav a[data-s]").forEach(a =>
     a.setAttribute("aria-current", String(a.dataset.s === page)));
+  primer();
   (PAGES[page] || (() => {}))();
   const p = $("#prov");
   if (p) p.innerHTML = `Every number here is read from the manuscript by a generator script, which
