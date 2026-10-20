@@ -619,7 +619,7 @@ function renderPlan(P) {
   $("#pRel").innerHTML = P.releases.map(r => `
     <div class="relcard${r.flag ? " flag" : ""}">
       <h4>${esc(r.name)}${r.note ? ` <span class="tag">${r.note}</span>` : ""}
-        <span class="tag">${r.left} ${P.attr.toLowerCase()} cue${r.left === 1 ? "" : "s"} left</span></h4>
+        <span class="tag">${r.left} ${P.attr.toLowerCase()} word${r.left === 1 ? "" : "s"} left</span></h4>
       <pre class="mini">${esc(r.text)}</pre></div>`).join("");
   const warn = $("#pWarn");
   if (warn) warn.innerHTML = (P.flipInert || P.stillStated.length)
@@ -654,15 +654,15 @@ function renderPlan(P) {
     const subj = P.ref.handle === "the person this text is mainly about"
       ? (g.subject || "not named in the text") : P.ref.handle;
     const rows = [
-      ["Attribute", `${esc(ATTRS[P.attr] ? P.attr.toLowerCase() : "sex")}`,
+      ["What is at risk", `${esc(ATTRS[P.attr] ? P.attr.toLowerCase() : "sex")}`,
         esc(g.why || "the register's default"), false],
-      ["True value", esc(P.gold), "the value the adversary is scored against", false],
-      ["Subject", esc(subj), "who the question is asked about", false],
-      ["Register", esc(P.domain.replace(/^an? /, "").split(/[ -]/)[0]),
-        `read as ${esc(P.domain)}; sets the prior and the threshold`, false],
-      ["Cue found", g.cues ? "yes" : "none",
-        g.cues ? "a lexicon surface the editors can act on"
-               : "add a pronoun, a kinship term or a role noun", !g.cues]
+      ["The real answer", esc(P.gold), "what the model is scored against", false],
+      ["Who it is about", esc(subj), "the person the question names", false],
+      ["Kind of text", esc(P.domain.replace(/^an? /, "").split(/[ -]/)[0]),
+        `read as ${esc(P.domain)}; it is what the model is told before the question`, false],
+      ["Revealing words", g.cues ? "found" : "none",
+        g.cues ? "words the editors below can act on"
+               : "add a pronoun, a family word or a job word", !g.cues]
     ];
     badge.innerHTML = `<table class="spec"><tbody>${rows.map(([k, v, w, flag]) =>
       `<tr${flag ? ' class="flag"' : ""}><th>${k}</th><td class="v" title="${v}">${v}</td>

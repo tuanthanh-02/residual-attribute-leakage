@@ -10,8 +10,8 @@
 <body data-page="analyse">
 <nav><div class="wrap">
   <span class="brand">Leakage Interface</span>
-  <a href="index.html" data-s="results">Results</a>
   <a href="analyse.html" data-s="analyse">Run the protocol</a>
+  <a href="index.html" data-s="results">Results</a>
   <span class="sp"></span>
   <button class="theme" id="theme" aria-label="Switch colour theme">Theme</button>
 </div></nav>
@@ -28,7 +28,10 @@
 <section data-n="1" data-rail="ink">
   <p class="eyebrow">What you give it</p>
   <h2>Your text</h2>
-  <p class="lede" style="margin-bottom:9px">Not sure what to write? Start from one of these.</p>
+  <p class="lede">Write one or two sentences about a person — or click a ready-made one below.
+  The page reads it and works out, on its own, what the text gives away and about whom; the
+  table under the box shows what it decided, and you can correct any of it.</p>
+  <p class="lede" style="margin-bottom:9px"><b>Four passages to start from:</b></p>
   <div class="pills" id="samples"></div>
   <textarea id="pText" spellcheck="false" aria-label="Your text">Ms. Carter is a 54-year-old patient. She came to the clinic with her husband, and the nurse recorded that she had been unwell for a week.</textarea>
   <div class="chips" id="pGuess" data-ready>Reading the text…</div>
@@ -56,16 +59,22 @@
 <section data-n="2" data-rail="grey">
   <p class="eyebrow">What the editors write</p>
   <h2>Releases built from it</h2>
-  <p class="lede">The de-identifier removes the names; the editors then act on the residual cues.
-  The last release writes the opposite-sex form exactly where the mask writes a placeholder.
-  Every arm leaves the shared keep-list alone — <code>patient</code> and <code>the court</code>
-  have no truthful broader term — and the <b>non-person rule</b> arm additionally keeps a cue that
-  names an institution rather than a person, which is why <code>clinic</code> survives there.</p>
-  <p class="lede"><b>Where SACC is.</b> These are <em>global</em> arms: they edit every lexicon
-  match, whoever it describes. SACC's first principle is closure, which needs a binder reading a
-  dependency parse to decide whom each cue describes, and that cannot run in a browser. The
-  non-person rule is the one scope rule that needs no parse, so it is the closest arm here. SACC's
-  own releases, and what closure contributes, are on the <a href="index.html">results page</a>.</p>
+  <p class="lede">Five versions of your sentence — what five different editors would publish.
+  The first has only the names taken out. The next three try to get rid of the words that give
+  the attribute away, each in its own way. The last one does <em>not</em> remove them: it writes
+  the <b>opposite</b> value in exactly the same places, which is the release the paper is about.
+  Each box shows how many of those words are still left.</p>
+  <details class="adj"><summary>Why some words survive every version</summary><div class="body">
+    <p>A few words are kept on purpose because no truthful broader word exists for them:
+    <code>patient</code> and <code>the court</code> name a role, not a sex. The
+    <b>non-person rule</b> version keeps one more kind: a word that names a place or an
+    institution rather than a person, which is why <code>clinic</code> survives there.</p>
+    <p><b>Where SACC is.</b> These are <em>global</em> editors: they change every word the lexicon
+    matches, whoever it describes. SACC's first principle, closure, needs a parser to work out
+    whom each word describes, and that cannot run in a browser. The non-person rule is the one
+    scope rule that needs no parser, so it is the closest version available here. SACC's own
+    releases are on the <a href="index.html">results page</a>.</p>
+  </div></details>
   <div class="rels" id="pRel"></div>
   <div id="pWarn"></div>
   <p class="note" id="pRef" style="border:0;padding-top:10px"></p>
@@ -74,21 +83,34 @@
 <section data-n="3" data-rail="blue">
   <p class="eyebrow">What the adversary reads</p>
   <h2>Ask the adversary</h2>
-  <p class="lede">The question, the single-token request and the renormalisation are the scorer's
-  own. Nothing is sent until you press Run, and <b id="pCalls">the request count</b> is shown
-  first.</p>
+  <p class="lede">The <b>adversary</b> is just a language model, standing in for whoever might
+  read the released text. It is asked the same question twice: once with <em>no text at all</em>,
+  to see what it already assumes about a person like this, and once with each version in front of
+  it, to see what the text added. The gap between the two is the leakage. Nothing is sent until
+  you press Run, and <b id="pCalls">the request count</b> is shown first.</p>
   <ol class="proto">
-    <li><b>Prior</b> — the same question with no text, asked under both candidate orders, giving
-      π, the adversary's answer before it reads anything.</li>
-    <li><b>Posterior</b> — the question again with the release in front of it, giving p.</li>
-    <li><b>Read the first token</b> and keep the mass on the option letters, renormalised over
-      them. How that token is asked for depends on the model: <span id="pTop">the frozen payload,
-      one token at temperature 0 with the top 20 log-probabilities</span>.</li>
-    <li><b>Score</b> — <code>d = clip((p − π) / (1 − π), 0, 1)</code>, averaged over the orders.
-      The band is <code>δ = .05</code>: above π+δ is <b>Leak</b>, below π−δ is <b>Misled</b>,
-      between them <b>Anon</b>.</li>
-    <li><b>Eligibility</b> — if π is already past the register's threshold τ, the entry is
-      dropped: the text cannot add what the adversary assumes without it.</li>
+    <li><b>Ask with no text.</b> Just the question and the answer options. What comes back is
+      <code>π</code>, the <em>prior</em>: how well the model guesses knowing nothing. For a
+      two-way question that should land near .50 — if it is already near 1, the model is
+      guessing from the question, not from your sentence.</li>
+    <li><b>Ask again with the text.</b> The same question, this time with one version in front
+      of it. What comes back is <code>p</code>, the model's confidence in the <em>true</em>
+      value after reading.</li>
+    <li><b>Read only the first letter.</b> The model answers with a single letter, and the
+      probability it assigned to each option letter is what gets recorded — not the words it
+      would have written. <span id="pTop">one token at temperature 0, with the top 20
+      log-probabilities</span>.</li>
+    <li><b>Score the gap.</b> <code>L = clip((p − π) / (1 − π), 0, 1)</code> — how much of the
+      room between the prior and certainty the text closed. <code>0</code> means the text added
+      nothing, <code>1</code> means it gave the answer away. Within <code>±.05</code> of the
+      prior the release counts as <b>Anon</b>; clearly above is <b>Leak</b>, clearly below is
+      <b>Misled</b> — the model was pushed towards the <em>wrong</em> value.</li>
+    <li><b>Each question is asked twice</b>, once with the true value listed first and once
+      second, and the two are averaged. Models favour whichever option they see first, and
+      averaging cancels most of it.</li>
+    <li><b>Drop the entry if there is nothing to measure.</b> If the model already guesses the
+      answer without any text, the text cannot be blamed for it, and the paper leaves such cases
+      out rather than crediting them.</li>
   </ol>
   <details class="adj"><summary>See exactly what would be sent</summary>
     <div class="body" id="pPrompts"></div></details>
