@@ -19,10 +19,8 @@
 <header class="hero-sm">
   <p class="kicker">End to end</p>
   <h1>Analyse your own sentence</h1>
-  <p class="tagline">Write a sentence about a person and see what a de-identified version of it
-  still gives away. The page works out what the sentence reveals and about whom, builds five
-  edited versions, and — if you give it a key — asks a language model to guess, exactly the way
-  the paper's evaluation does.</p>
+  <p class="tagline">Write a sentence about a person. See what a de-identified version of it
+  still gives away, and how differently that can be scored.</p>
 </header>
   <div id="primer"></div>
   <nav class="rail" aria-label="The four steps on this page">
@@ -35,10 +33,8 @@
 <section id="step1" data-n="1" data-rail="ink">
   <p class="eyebrow">What you give it</p>
   <h2>Your text</h2>
-  <p class="lede">Write one or two sentences about a person — or click a ready-made one below.
-  The page reads it and works out, on its own, what the text gives away and about whom; the
-  table under the box shows what it decided, and you can correct any of it.</p>
-  <p class="lede" style="margin-bottom:9px"><b>Four passages to start from:</b></p>
+  <p class="lede" style="margin-bottom:9px">Pick one, or write your own. Everything below
+  follows from it.</p>
   <div class="pills" id="samples"></div>
   <textarea id="pText" spellcheck="false" aria-label="Your text">Ms. Carter is a 54-year-old patient. She came to the clinic with her husband, and the nurse recorded that she had been unwell for a week.</textarea>
   <div class="chips" id="pGuess" data-ready>Reading the text…</div>
@@ -66,30 +62,25 @@
 <section id="step2" data-n="2" data-rail="grey">
   <p class="eyebrow">What the editors write</p>
   <h2>Releases built from it</h2>
-  <p class="lede">Five versions of your sentence — what five different editors would publish.
-  The first has only the names taken out. The next three try to get rid of the words that give
-  the attribute away, each in its own way. The last one does <em>not</em> remove them: it writes
-  the <b>opposite</b> value in exactly the same places, which is the release the paper is about.
-  Each box shows how many of those words are still left.</p>
-  <details class="adj"><summary>Why some words survive every version</summary><div class="body">
-    <p>A few words are kept on purpose because no truthful broader word exists for them:
-    <code>patient</code> and <code>the court</code> name a role, not a sex. The
-    <b>non-person rule</b> version keeps one more kind: a word that names a place or an
-    institution rather than a person, which is why <code>clinic</code> survives there.</p>
-    <p><b>Where SACC is.</b> These are <em>global</em> editors: they change every word the lexicon
-    matches, whoever it describes. SACC's first principle, closure, needs a parser to work out
-    whom each word describes, and that cannot run in a browser. The non-person rule is the one
-    scope rule that needs no parser, so it is the closest version available here. SACC's own
-    releases are on the <a href="index.html">results page</a>.</p>
+  <p class="lede">Six editors, same sentence. The last one does not remove the revealing words —
+  it writes the <b>opposite</b> value in their place.</p>
+  <details class="adj"><summary>What each editor does, and why some words survive all of them</summary>
+    <div class="body">
+    <p>The first has only the names taken out. <b>Global mask</b> deletes every word the lexicon
+    matches; <b>global, rewritten</b> replaces each with a broader word instead; the
+    <b>non-person rule</b> does the same but spares words naming a place rather than a person,
+    which is why <code>clinic</code> survives there. <b>SACC</b> is below. The last writes the
+    opposite value at exactly the spans the mask deletes.</p>
+    <p>A few words are kept by every one of them, because no truthful broader word exists:
+    <code>patient</code> and <code>the court</code> name a role, not a sex.</p>
+    <p>Apart from SACC these are <em>global</em> editors: they change every match, whoever it
+    describes. The count on each box is how many revealing words are left.</p>
   </div></details>
   <div class="rels" id="pRel"></div>
   <div id="pWarn"></div>
   <h3 class="step">SACC: whom is each word about?</h3>
-  <p class="lede">The paper proposes two things. One is the protocol below. The other is
-  <b>SACC</b>, the editor — and its first principle, <em>closure</em>, is to edit every word that
-  gives the attribute away <em>about the protected person</em>, and leave the rest alone. Deciding
-  whose attribute a word states needs a parser, which a browser cannot run, so here you decide.
-  The <b>SACC</b> release above is rebuilt from your answers.</p>
+  <p class="lede">SACC edits a word only if it describes <em>the person being asked about</em>.
+  Deciding that needs a parser, so here you decide — and the SACC release above follows.</p>
   <div id="pBind"></div>
   <p class="note" id="pRef" style="border:0;padding-top:10px"></p>
 </section>
@@ -97,11 +88,8 @@
 <section id="step3" data-n="3" data-rail="blue">
   <p class="eyebrow">What the adversary reads</p>
   <h2>Ask the adversary</h2>
-  <p class="lede">The <b>adversary</b> is just a language model, standing in for whoever might
-  read the released text. It is asked the same question twice: once with <em>no text at all</em>,
-  to see what it already assumes about a person like this, and once with each version in front of
-  it, to see what the text added. The gap between the two is the leakage. Nothing is sent until
-  you press Run, and <b id="pCalls">the request count</b> is shown first.</p>
+  <p class="lede">A language model guesses the value — once with no text, once per version. The
+  gap is the leakage. Nothing is sent until you press Run: <b id="pCalls">the request count</b>.</p>
   <h3 class="step">What you need</h3>
   <div style="margin-top:14px">
     <label class="fld"><span>OpenAI API key <em>— the only thing you need to type here</em></span>
@@ -128,12 +116,13 @@
   </div>
   <p class="note" id="pErr" style="color:var(--flag);border:0;padding-top:0"></p>
   <div id="pOut"></div>
-  <p class="note"><b>Before you use a key.</b> It stays in this page, in memory, and is sent only
-  to the model provider; the page writes nothing to storage. A key typed into any web page is
-  readable by that page, so use a restricted key and revoke it afterwards. Your text is sent to
-  the provider, so do not paste real personal or patient data. De-identification here stands in
-  for the tagger the released pipeline uses, and the occupation candidates are a demo set rather
-  than the annotation strata.</p>
+  <p class="note"><b>Use a restricted key, and do not paste real patient data.</b> Your key and
+  your text go only to the model provider.
+  <details class="adj" style="margin-top:8px"><summary>What the page does with them</summary>
+    <div class="body"><p>The key stays in this page, in memory, and the page writes nothing to
+    storage. A key typed into any web page is readable by that page, so revoke it afterwards.
+    De-identification here stands in for the tagger the released pipeline uses, and the
+    occupation candidates are a demo set rather than the annotation strata.</p></div></details></p>
   <h3 class="step">How it works</h3>
   <details class="adj"><summary>How the score is computed, step by step</summary>
     <div class="body">
@@ -169,9 +158,7 @@
 <section id="step4" data-n="4" data-rail="flag">
   <p class="eyebrow">The rules, by hand</p>
   <h2>The cue layer on its own</h2>
-  <p class="lede">The frozen lexicons and the rewrite and flip tables, one operation at a time, on
-  the same passage you entered above. Editing either box changes both, so what you read here is
-  always the text the run would score.</p>
+  <p class="lede">The same passage, one rule at a time. Both boxes stay in step.</p>
   <textarea id="inp" spellcheck="false" aria-label="Cue layer input"></textarea>
   <div class="toolbar"><div id="ops"></div>
     <button id="copy" type="button">Copy output</button>
@@ -185,9 +172,8 @@
     <span><i class="sw neu"></i>generalised</span>
     <span><i class="sw flip"></i>flipped to the opposite value</span>
   </div>
-  <p class="note">This is the cue layer with a surface agreement pass. The released editor adds a
-  binder that reads a dependency parse to decide whom each cue describes, and repairs agreement
-  from that same parse; both run offline, on CPU, with no model call.</p>
+  <p class="note">This is the cue layer alone; the released editor also runs a parser, offline and
+  on CPU, to decide whom each word describes.</p>
 </section>
 
 <footer id="prov"></footer>

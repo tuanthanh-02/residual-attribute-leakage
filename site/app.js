@@ -396,13 +396,13 @@ function inferAll(text) {
   const rel = REL.find(([re]) => re.test(text));
   const occ = OCC.find(([re]) => re.test(text));
   let attr = "SEX", gold = f >= m ? "female" : "male";
-  let why = `${f} feminine and ${m} masculine cues for the subject`;
+  let why = `${f} feminine and ${m} masculine word${f + m === 1 ? "" : "s"} about them`;
   if (!f && !m) {
     if (rel) { attr = "RELATIONSHIP"; gold = rel[1];
-      why = fAll || mAll ? "the only sex-marked words describe a relative, so the relationship is "
-                           + "the attribute read" : "a relationship term"; }
-    else if (occ) { attr = "OCCUPATION"; gold = occ[1]; why = "a role word"; }
-    else { gold = "female"; why = "no cue the lexicons cover, so this is only a default"; }
+      why = fAll || mAll ? "the only sex-marked words describe a relative, so the relationship "
+                           + "is read instead" : "a word naming a relationship"; }
+    else if (occ) { attr = "OCCUPATION"; gold = occ[1]; why = "a word naming a job"; }
+    else { gold = "female"; why = "nothing the lexicons cover, so this is only a default"; }
   }
   let dom = (DOMAINS.find(([re]) => re.test(text)) || [, null])[1];
   if (!dom) dom = FIRST.test(text) ? "a social-media post"
@@ -698,10 +698,8 @@ function renderPlan(P) {
               `<button type="button" data-k="${k}" aria-pressed="${cur === k}">${BIND[k]}</button>`
             ).join("")}</span></td></tr>`;
         }).join("")}</tbody></table>
-        <p class="note" style="border:0">SACC edits only the words bound to <b>the person asked
-        about</b> — that is <b>closure</b> — and it rewrites them to a broader word that stays
-        true rather than deleting them. The other two answers are its <b>scope</b> rules. Change
-        an answer and the SACC release above changes with it.</p>`;
+        <p class="note" style="border:0">Only the first answer is edited — that is
+        <b>closure</b>; the other two are SACC's <b>scope</b> rules.</p>`;
     bh.onclick = e => {
       const b = e.target.closest("button[data-k]"); if (!b) return;
       S.binds[+b.parentElement.dataset.i] = b.dataset.k;
