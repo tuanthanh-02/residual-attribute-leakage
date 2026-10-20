@@ -430,3 +430,19 @@ details.primer table.spec td{height:auto}
 .rail a[href="#step4"]{--rail:var(--flag)}
 @media (max-width:640px){ .rail a{flex:1 1 100%;border-right:0;
   border-bottom:1px solid var(--line2);padding:9px 0} .rail a:last-child{border-bottom:0} }
+
+/* the binder: three answers per cue, the one in force held down */
+.bind{display:inline-flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden}
+.bind button{border:0;border-right:1px solid var(--line);border-radius:0;background:transparent;
+  padding:5px 11px;font-size:.78rem;color:var(--dim)}
+.bind button:last-child{border-right:0}
+.bind button[aria-pressed="true"]{background:var(--ok);color:var(--panel);font-weight:650}
+.bind button[data-k="other"][aria-pressed="true"]{background:var(--bar2)}
+.bind button[data-k="thing"][aria-pressed="true"]{background:var(--faint)}
+#pBind table.spec th{width:auto;font-family:var(--mono);font-size:.76rem;text-transform:none;
+  letter-spacing:0;color:var(--dim);white-space:normal}
+#pBind table.spec th b{color:var(--ink);background:var(--mark);padding:0 2px;border-radius:2px}
+#pBind table.spec td{height:auto}
+.relcard.sacc{border-color:var(--ok)}
+.relcard.sacc h4{color:var(--ok)}

@@ -475,6 +475,64 @@ const isInstitution = w =>
 
 /* apply one cue operation to a text and return the plain string.
    scope: "global" edits every match; "nonperson" also applies the non-person rule */
+/* ============================================================ SACC, the paper's second proposal
+   SACC is the editor, and it rests on three principles. Two of them run here as they do in the
+   released code: *admissible rewriting* replaces a cue with a broader word that stays true
+   instead of deleting it, and *scope* leaves alone any cue that names an institution rather than
+   a person. The third, *closure* -- edit every cue bound to a protected person, and only those --
+   needs a binder that reads a dependency parse, which a browser cannot run.
+
+   Rather than fake the binder or drop the principle, the reader is the binder: each cue is
+   listed with the three answers the binder gives, and SACC's output follows mechanically from
+   them. Getting a binding wrong is the point, not a flaw in the demo -- the paper measures what
+   that costs. */
+const BIND = { self: "the person asked about", other: "a different person", thing: "not a person" };
+
+function cueHits(text) {
+  const hits = [];
+  for (const pat of Object.values(D.cue.lexicon)) {
+    let re; try { re = new RegExp(pat, "gi"); } catch (e) { continue; }
+    let m; while ((m = re.exec(text))) {
+      if (m[0].trim()) hits.push([m.index, m.index + m[0].length]);
+      if (m.index === re.lastIndex) re.lastIndex++;
+    }
+  }
+  hits.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
+  const out = [];
+  let at = 0;
+  for (const [a, b] of hits) {
+    if (a < at) continue;
+    const surf = text.slice(a, b);
+    if (isKept(surf)) continue;                       // the keep-list every arm respects
+    out.push({ a, b, surf });
+    at = b;
+  }
+  return out;
+}
+
+/* The binding the demo starts from, and the paper's own reading of these forms: a kinship word
+   states the RELATIVE's attribute, not the subject's, and an institution names no person. */
+function guessBind(surf) {
+  if (isInstitution(surf)) return "thing";
+  return /\b(husband|wife|widow(?:er)?|father|mother|son|daughter|brother|sister|spouse|partner)\b/i
+    .test(surf) ? "other" : "self";
+}
+
+/* SACC's release: closure over the cues bound to the subject, admissible rewriting on each,
+   everything else untouched. */
+function saccText(text, binds) {
+  const cues = cueHits(text);
+  let out = "", at = 0;
+  cues.forEach((c, i) => {
+    if ((binds[i] || guessBind(c.surf)) !== "self") return;   // scope: not ours to edit
+    const nxt = (text.slice(c.b).match(/^\W*([A-Za-z]+)/) || [, ""])[1];
+    out += text.slice(at, c.a) + OPS[2][1](c.surf, nxt).t;    // the ladder, not a mask
+    at = c.b;
+  });
+  out += text.slice(at);
+  return agree(out).replace(/[ \t]{2,}/g, " ").trim();
+}
+
 function applyOp(text, opIndex, scope) {
   const fn = OPS[opIndex][1], hits = [];
   for (const p of Object.values(D.cue.lexicon)) {
@@ -577,6 +635,8 @@ function plan() {
   // whoever it describes — plus the non-person rule, which needs no parse. SACC's own scope rule
   // does, so SACC is not among these; its releases are on the Findings page.
     const q = A.q;
+  if (S.bindsFor !== input) { S.binds = {}; S.bindsFor = input; }
+  const binds = S.binds || (S.binds = {});
   const RULE = {
     none: `the names were removed and nothing else was changed`,
     mask: `every word that stated a person's ${q} was replaced with [REDACTED]`,
@@ -590,6 +650,8 @@ function plan() {
     { name: "Global mask", text: applyOp(input, 1, "global"), rule: RULE.mask },
     { name: "Global, rewritten", text: applyOp(input, 2, "global"), rule: RULE.ladder },
     { name: "Non-person rule", text: applyOp(input, 2, "nonperson"), note: "scope",
+      rule: RULE.ladder },
+    { name: "SACC", text: saccText(input, binds), sacc: true, note: "the paper's editor",
       rule: RULE.ladder },
     { name: "Flipped (misdirection)", text: applyOp(input, 3, "global"), flag: true,
       rule: RULE.flip }
@@ -611,16 +673,41 @@ function plan() {
   const ref = reference(releases[0].text, mention);
   const told = !!(($("#ruleaware") || {}).checked);
   const calls = orders.length * (1 + releases.length * (told ? 2 : 1));
-  return { raw, input, releases, attr, A, gold, domain, orders, ref, calls, told, flipInert, stillStated };
+  return { raw, input, releases, attr, A, gold, domain, orders, ref, calls, told, flipInert, stillStated, cues: cueHits(input), binds };
 }
 
 function renderPlan(P) {
   renderCost(P);
   $("#pRel").innerHTML = P.releases.map(r => `
-    <div class="relcard${r.flag ? " flag" : ""}">
+    <div class="relcard${r.flag ? " flag" : ""}${r.sacc ? " sacc" : ""}">
       <h4>${esc(r.name)}${r.note ? ` <span class="tag">${r.note}</span>` : ""}
         <span class="tag">${r.left} ${P.attr.toLowerCase()} word${r.left === 1 ? "" : "s"} left</span></h4>
       <pre class="mini">${esc(r.text)}</pre></div>`).join("");
+  // the binder, handed to the reader: SACC's output follows from these three answers
+  const bh = $("#pBind");
+  if (bh) {
+    bh.innerHTML = !P.cues.length
+      ? `<p class="note">No word in this passage matches the lexicon, so there is nothing for
+         SACC to decide.</p>`
+      : `<table class="spec"><tbody>${P.cues.map((c, i) => {
+          const cur = P.binds[i] || guessBind(c.surf);
+          const ctx = esc(P.input.slice(Math.max(0, c.a - 22), c.a)) +
+            `<b>${esc(c.surf)}</b>` + esc(P.input.slice(c.b, c.b + 22));
+          return `<tr><th>…${ctx}…</th><td class="w" colspan="2">
+            <span class="bind" data-i="${i}">${Object.keys(BIND).map(k =>
+              `<button type="button" data-k="${k}" aria-pressed="${cur === k}">${BIND[k]}</button>`
+            ).join("")}</span></td></tr>`;
+        }).join("")}</tbody></table>
+        <p class="note" style="border:0">SACC edits only the words bound to <b>the person asked
+        about</b> — that is <b>closure</b> — and it rewrites them to a broader word that stays
+        true rather than deleting them. The other two answers are its <b>scope</b> rules. Change
+        an answer and the SACC release above changes with it.</p>`;
+    bh.onclick = e => {
+      const b = e.target.closest("button[data-k]"); if (!b) return;
+      S.binds[+b.parentElement.dataset.i] = b.dataset.k;
+      renderPlan(plan());
+    };
+  }
   const warn = $("#pWarn");
   if (warn) warn.innerHTML = (P.flipInert || P.stillStated.length)
     ? `<p class="note flagged">${P.flipInert
