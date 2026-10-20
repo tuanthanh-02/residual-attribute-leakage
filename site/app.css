@@ -413,3 +413,20 @@ details.primer table.spec{margin-top:14px}
 details.primer table.spec th{color:var(--ink);font-family:var(--mono);text-transform:none;
   letter-spacing:0;font-size:.78rem;width:8.5em}
 details.primer table.spec td{height:auto}
+
+/* the four steps, visible at a glance and jumpable: the page is five screens long, so its shape
+   has to be legible before any of it is read */
+.rail{display:flex;flex-wrap:wrap;gap:0;margin:18px 0 0;border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--line)}
+.rail a{flex:1 1 170px;display:flex;align-items:baseline;gap:9px;padding:11px 14px 11px 0;
+  text-decoration:none;color:var(--dim);font-size:.88rem;border-right:1px solid var(--line2)}
+.rail a:last-child{border-right:0}
+.rail a:hover{color:var(--ink)}
+/* each numeral wears the colour of the section it jumps to, so the rail previews the page */
+.rail a b{font-size:1.15rem;font-weight:650;color:var(--rail);font-variant-numeric:tabular-nums}
+.rail a[href="#step1"]{--rail:var(--ink)}
+.rail a[href="#step2"]{--rail:var(--bar2)}
+.rail a[href="#step3"]{--rail:var(--accent)}
+.rail a[href="#step4"]{--rail:var(--flag)}
+@media (max-width:640px){ .rail a{flex:1 1 100%;border-right:0;
+  border-bottom:1px solid var(--line2);padding:9px 0} .rail a:last-child{border-bottom:0} }

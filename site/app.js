@@ -770,6 +770,9 @@ async function attack() {
         brier: (1 - post) ** 2, logloss: -Math.log(Math.max(post, 1e-12)) });
     }
     say(""); result(P, pri, rows, { trunc, nCalls, noLp, model: model.id, cap: model, priPer });
+    // the table lands below the fold on a long page; take the reader to what they just paid for
+    const out = $("#pOut");
+    if (out && out.scrollIntoView) out.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (e) {
     $("#pErr").innerHTML = esc(String(e.message || e)) + `<br><span class="tag">If the browser
       blocked the request as cross-origin, the provider does not allow calls from a page; run the

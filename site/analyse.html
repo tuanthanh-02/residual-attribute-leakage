@@ -19,13 +19,20 @@
 <header class="hero-sm">
   <p class="kicker">End to end</p>
   <h1>Analyse your own sentence</h1>
-  <p class="tagline">Write one sentence about a person. The page works out which attribute it
-  states, what the value is, who the subject is and what kind of document it looks like, then
-  builds the releases and scores them with the protocol from the paper.</p>
+  <p class="tagline">Write a sentence about a person and see what a de-identified version of it
+  still gives away. The page works out what the sentence reveals and about whom, builds five
+  edited versions, and — if you give it a key — asks a language model to guess, exactly the way
+  the paper's evaluation does.</p>
 </header>
   <div id="primer"></div>
+  <nav class="rail" aria-label="The four steps on this page">
+    <a href="#step1"><b>1</b> Your text</a>
+    <a href="#step2"><b>2</b> Five versions of it</a>
+    <a href="#step3"><b>3</b> Run the adversary</a>
+    <a href="#step4"><b>4</b> The rules by hand</a>
+  </nav>
 
-<section data-n="1" data-rail="ink">
+<section id="step1" data-n="1" data-rail="ink">
   <p class="eyebrow">What you give it</p>
   <h2>Your text</h2>
   <p class="lede">Write one or two sentences about a person — or click a ready-made one below.
@@ -56,7 +63,7 @@
   </div></details>
 </section>
 
-<section data-n="2" data-rail="grey">
+<section id="step2" data-n="2" data-rail="grey">
   <p class="eyebrow">What the editors write</p>
   <h2>Releases built from it</h2>
   <p class="lede">Five versions of your sentence — what five different editors would publish.
@@ -80,7 +87,7 @@
   <p class="note" id="pRef" style="border:0;padding-top:10px"></p>
 </section>
 
-<section data-n="3" data-rail="blue">
+<section id="step3" data-n="3" data-rail="blue">
   <p class="eyebrow">What the adversary reads</p>
   <h2>Ask the adversary</h2>
   <p class="lede">The <b>adversary</b> is just a language model, standing in for whoever might
@@ -88,33 +95,11 @@
   to see what it already assumes about a person like this, and once with each version in front of
   it, to see what the text added. The gap between the two is the leakage. Nothing is sent until
   you press Run, and <b id="pCalls">the request count</b> is shown first.</p>
-  <ol class="proto">
-    <li><b>Ask with no text.</b> Just the question and the answer options. What comes back is
-      <code>π</code>, the <em>prior</em>: how well the model guesses knowing nothing. For a
-      two-way question that should land near .50 — if it is already near 1, the model is
-      guessing from the question, not from your sentence.</li>
-    <li><b>Ask again with the text.</b> The same question, this time with one version in front
-      of it. What comes back is <code>p</code>, the model's confidence in the <em>true</em>
-      value after reading.</li>
-    <li><b>Read only the first letter.</b> The model answers with a single letter, and the
-      probability it assigned to each option letter is what gets recorded — not the words it
-      would have written. <span id="pTop">one token at temperature 0, with the top 20
-      log-probabilities</span>.</li>
-    <li><b>Score the gap.</b> <code>L = clip((p − π) / (1 − π), 0, 1)</code> — how much of the
-      room between the prior and certainty the text closed. <code>0</code> means the text added
-      nothing, <code>1</code> means it gave the answer away. Within <code>±.05</code> of the
-      prior the release counts as <b>Anon</b>; clearly above is <b>Leak</b>, clearly below is
-      <b>Misled</b> — the model was pushed towards the <em>wrong</em> value.</li>
-    <li><b>Each question is asked twice</b>, once with the true value listed first and once
-      second, and the two are averaged. Models favour whichever option they see first, and
-      averaging cancels most of it.</li>
-    <li><b>Drop the entry if there is nothing to measure.</b> If the model already guesses the
-      answer without any text, the text cannot be blamed for it, and the paper leaves such cases
-      out rather than crediting them.</li>
-  </ol>
-  <details class="adj"><summary>See exactly what would be sent</summary>
-    <div class="body" id="pPrompts"></div></details>
-  <h3 class="step">Model and cost</h3>
+  <h3 class="step">What you need</h3>
+  <div style="margin-top:14px">
+    <label class="fld"><span>OpenAI API key <em>— the only thing you need to type here</em></span>
+      <input id="pKey" type="password" autocomplete="off" placeholder="sk-…"></label>
+  </div>
   <label class="fld"><span>Model</span><select id="pModel"></select></label>
   <div id="mcap"></div>
   <label class="opt"><input type="checkbox" id="ruleaware">
@@ -130,9 +115,9 @@
       <input id="rOut" inputmode="decimal" disabled></label>
   </div>
 
-  <div style="margin-top:14px">
-    <label class="fld"><span>OpenAI API key <em>— the only thing you need to type here</em></span>
-      <input id="pKey" type="password" autocomplete="off" placeholder="sk-…"></label>
+  <div class="runbar">
+    <button id="pRun" type="button">Run the adversary</button>
+    <span class="count" id="pStatus"></span>
   </div>
   <p class="note" id="pErr" style="color:var(--flag);border:0;padding-top:0"></p>
   <div id="pOut"></div>
@@ -142,13 +127,39 @@
   the provider, so do not paste real personal or patient data. De-identification here stands in
   for the tagger the released pipeline uses, and the occupation candidates are a demo set rather
   than the annotation strata.</p>
-  <div class="runbar">
-    <button id="pRun" type="button">Run the adversary</button>
-    <span class="count" id="pStatus"></span>
-  </div>
+  <h3 class="step">How it works</h3>
+  <details class="adj"><summary>How the score is computed, step by step</summary>
+    <div class="body">
+    <ol class="proto">
+      <li><b>Ask with no text.</b> Just the question and the answer options. What comes back is
+        <code>π</code>, the <em>prior</em>: how well the model guesses knowing nothing. For a
+        two-way question that should land near .50 — if it is already near 1, the model is
+        guessing from the question, not from your sentence.</li>
+      <li><b>Ask again with the text.</b> The same question, this time with one version in front
+        of it. What comes back is <code>p</code>, the model's confidence in the <em>true</em>
+        value after reading.</li>
+      <li><b>Read only the first letter.</b> The model answers with a single letter, and the
+        probability it assigned to each option letter is what gets recorded — not the words it
+        would have written. <span id="pTop">one token at temperature 0, with the top 20
+        log-probabilities</span>.</li>
+      <li><b>Score the gap.</b> <code>L = clip((p − π) / (1 − π), 0, 1)</code> — how much of the
+        room between the prior and certainty the text closed. <code>0</code> means the text added
+        nothing, <code>1</code> means it gave the answer away. Within <code>±.05</code> of the
+        prior the release counts as <b>Anon</b>; clearly above is <b>Leak</b>, clearly below is
+        <b>Misled</b> — the model was pushed towards the <em>wrong</em> value.</li>
+      <li><b>Each question is asked twice</b>, once with the true value listed first and once
+        second, and the two are averaged. Models favour whichever option they see first, and
+        averaging cancels most of it.</li>
+      <li><b>Drop the entry if there is nothing to measure.</b> If the model already guesses the
+        answer without any text, the text cannot be blamed for it, and the paper leaves such cases
+        out rather than crediting them.</li>
+    </ol>
+    </div></details>
+  <details class="adj"><summary>See exactly what would be sent</summary>
+    <div class="body" id="pPrompts"></div></details>
 </section>
 
-<section data-n="4" data-rail="flag">
+<section id="step4" data-n="4" data-rail="flag">
   <p class="eyebrow">The rules, by hand</p>
   <h2>The cue layer on its own</h2>
   <p class="lede">The frozen lexicons and the rewrite and flip tables, one operation at a time, on
