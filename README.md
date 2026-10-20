@@ -6,6 +6,7 @@
   <a href="https://tuanthanh-02.github.io/residual-attribute-leakage/"><img src="https://img.shields.io/badge/demo-live-1c3f6e" alt="Demo"></a>
   <img src="https://img.shields.io/badge/paper-under%20review-8c3a12" alt="Paper">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-1d5c3e" alt="License: MIT"></a>
+  <a href="https://huggingface.co/spaces/tuanthanh02/residual-attribute-leakage"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Space-static-ffb300" alt="Hugging Face Space"></a>
   <img src="https://img.shields.io/badge/dependencies-none-55555f" alt="No dependencies">
 </p>
 
@@ -21,6 +22,7 @@ rule, the adversary's probability on the true value goes .252 → .769.</sub></p
 
 ## News
 
+- **2026-10** — also on Hugging Face Spaces: [spaces/tuanthanh02/residual-attribute-leakage](https://huggingface.co/spaces/tuanthanh02/residual-attribute-leakage)
 - **2026-10** — demo released at [tuanthanh-02.github.io/residual-attribute-leakage/](https://tuanthanh-02.github.io/residual-attribute-leakage/)
 - **2026-10** — paper submitted; under review
 
@@ -158,7 +160,8 @@ residual-attribute-leakage/
 │   ├── app.css
 │   └── data.json             every number on the site
 ├── tools/
-│   └── make_demo_data.py     writes data.json from the manuscript
+│   ├── make_demo_data.py     writes data.json from the manuscript
+│   └── build_space.py        assembles the Hugging Face Space from docs/
 ├── LICENSE
 └── README.md
 ```

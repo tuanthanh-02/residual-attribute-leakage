@@ -27,7 +27,7 @@ sdk: static
 app_file: index.html
 pinned: false
 license: mit
-short_description: A privacy verdict depends on how you score it. Audit one, on your own text.
+short_description: A privacy verdict depends on how it is scored
 tags:
   - privacy
   - anonymization
@@ -57,7 +57,7 @@ and goes only to the provider; nothing is stored and nothing is sent until you p
 is a handful of single-token calls and costs a fraction of a cent.
 
 Source and the paper's numbers: [{GITHUB.replace("https://", "")}]({GITHUB}) ·
-also at [{PAGES.replace("https://", "")}]({PAGES})
+the same site is also served from [GitHub Pages]({PAGES})
 """
 
 
@@ -74,6 +74,10 @@ def main():
         shutil.copy2(src, os.path.join(out, name))
         copied.append(name)
     assert "index.html" in copied, "app_file must exist: " + str(copied)
+    # the Hub caps this field at 60 characters and refuses the upload otherwise
+    desc = [l for l in FRONT.split("\n") if l.startswith("short_description:")][0]
+    desc = desc.split(":", 1)[1].strip()
+    assert len(desc) <= 60, f"short_description is {len(desc)} characters, the Hub allows 60"
     with open(os.path.join(out, "README.md"), "w") as f:
         f.write(FRONT)
     total = sum(os.path.getsize(os.path.join(out, f)) for f in os.listdir(out))
