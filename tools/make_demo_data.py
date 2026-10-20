@@ -12,7 +12,8 @@ and must reproduce its printed Rk; SWAP must hold the lowest MedQA L; and only t
 may carry reversals, which is what the abstract claims.
 
     $SPIA_PY scripts/make_demo_data.py
-Writes /data_x/thanh/tam/demo/data.json.  CPU only, 0 USD.
+Writes the site's data.json (by default into the published repository, or to the path
+given as the first argument).  CPU only, 0 USD.
 """
 import json
 import os
@@ -24,7 +25,8 @@ os.chdir(SP); sys.path.insert(0, SP)
 TEX = "/data_x/thanh/tam/sacc_eval.tex"
 # where the generated file goes; the default is the working copy of the site, and the
 # published repository passes its own path as the first argument
-OUT = sys.argv[1] if len(sys.argv) > 1 else "/data_x/thanh/tam/demo/data.json"
+OUT = (sys.argv[1] if len(sys.argv) > 1 else
+       "/data_x/thanh/tam/residual-attribute-leakage/site/data.json")
 
 
 def tex():
