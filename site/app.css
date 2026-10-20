@@ -33,7 +33,7 @@
 *,*::before,*::after{box-sizing:border-box}
 /* the gutter is reserved whether or not the page overflows, so a panel that grows cannot
    shove the whole column sideways */
-html{scroll-behavior:smooth;scroll-padding-top:62px;scrollbar-gutter:stable}
+html{scroll-behavior:smooth;scroll-padding-top:120px;scrollbar-gutter:stable}
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto}
   *{animation-duration:.01ms !important;transition-duration:.01ms !important} }
 body{margin:0;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;
@@ -416,8 +416,12 @@ details.primer table.spec td{height:auto}
 
 /* the four steps, visible at a glance and jumpable: the page is five screens long, so its shape
    has to be legible before any of it is read */
+/* The rail is a <nav>, so it was picking up the running head's `position:sticky; top:0` and
+   pinning on top of it. It is pinned on purpose now, directly under that bar, with an opaque
+   background of its own so the page does not show through. */
 .rail{display:flex;flex-wrap:wrap;gap:0;margin:18px 0 0;border-top:1px solid var(--rule);
-  border-bottom:1px solid var(--line)}
+  border-bottom:1px solid var(--line);position:sticky;top:53px;z-index:20;
+  background:var(--paper);backdrop-filter:none}
 .rail a{flex:1 1 170px;display:flex;align-items:baseline;gap:9px;padding:11px 14px 11px 0;
   text-decoration:none;color:var(--dim);font-size:.88rem;border-right:1px solid var(--line2)}
 .rail a:last-child{border-right:0}
@@ -428,8 +432,10 @@ details.primer table.spec td{height:auto}
 .rail a[href="#step2"]{--rail:var(--bar2)}
 .rail a[href="#step3"]{--rail:var(--accent)}
 .rail a[href="#step4"]{--rail:var(--flag)}
-@media (max-width:640px){ .rail a{flex:1 1 100%;border-right:0;
-  border-bottom:1px solid var(--line2);padding:9px 0} .rail a:last-child{border-bottom:0} }
+/* stacked on a phone, six rows of it would be most of the screen, so it is not pinned there */
+@media (max-width:640px){ .rail{position:static}
+  .rail a{flex:1 1 100%;border-right:0;border-bottom:1px solid var(--line2);padding:9px 0}
+  .rail a:last-child{border-bottom:0} }
 
 /* the binder: three answers per cue, the one in force held down */
 .bind{display:inline-flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:var(--r);
