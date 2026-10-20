@@ -3,10 +3,9 @@
 <h3 align="center">Auditing Privacy Evaluation After Text De-identification</h3>
 
 <p align="center">
-  <a href="https://tuanthanh-02.github.io/residual-attribute-leakage/"><img src="https://img.shields.io/badge/demo-live-1c3f6e" alt="Demo"></a>
+  <a href="https://huggingface.co/spaces/tuanthanh02/residual-attribute-leakage"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20demo-live-ffb300" alt="Hugging Face Space"></a>
   <img src="https://img.shields.io/badge/paper-under%20review-8c3a12" alt="Paper">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-1d5c3e" alt="License: MIT"></a>
-  <a href="https://huggingface.co/spaces/tuanthanh02/residual-attribute-leakage"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Space-static-ffb300" alt="Hugging Face Space"></a>
   <img src="https://img.shields.io/badge/dependencies-none-55555f" alt="No dependencies">
 </p>
 
@@ -22,8 +21,7 @@ rule, the adversary's probability on the true value goes .252 → .769.</sub></p
 
 ## News
 
-- **2026-10** — also on Hugging Face Spaces: [spaces/tuanthanh02/residual-attribute-leakage](https://huggingface.co/spaces/tuanthanh02/residual-attribute-leakage)
-- **2026-10** — demo released at [tuanthanh-02.github.io/residual-attribute-leakage/](https://tuanthanh-02.github.io/residual-attribute-leakage/)
+- **2026-10** — demo released on Hugging Face Spaces: [spaces/tuanthanh02/residual-attribute-leakage](https://huggingface.co/spaces/tuanthanh02/residual-attribute-leakage)
 - **2026-10** — paper submitted; under review
 
 ## Overview
@@ -87,7 +85,7 @@ No build step and no dependencies; any static file server will do.
 
 ```bash
 git clone https://github.com/tuanthanh-02/residual-attribute-leakage.git
-cd residual-attribute-leakage/docs
+cd residual-attribute-leakage/site
 python3 -m http.server 8000
 ```
 
@@ -105,10 +103,10 @@ attribute it states and who the subject is, builds five releases, and shows the 
 would send. With an OpenAI key it then runs the scorer's own question and reports π, p, `L`, the
 band state, the per-candidate-order split and, optionally, a rule-aware second pass.
 
-**Regenerate the data.** `docs/data.json` is produced from the manuscript:
+**Regenerate the data.** `site/data.json` is produced from the manuscript:
 
 ```bash
-python tools/make_demo_data.py docs/data.json     # runs in the research tree
+python tools/make_demo_data.py site/data.json     # runs in the research tree
 ```
 
 The generator parses the paper's tables and exports the frozen cue layer, and refuses to write
@@ -153,7 +151,7 @@ judge controls instead, and two of three judges fail their own control.
 residual-attribute-leakage/
 ├── assets/
 │   └── overview.svg          the figure above
-├── docs/                     the published site (GitHub Pages serves this folder)
+├── site/                     the two pages; the Space is built from this folder
 │   ├── index.html            the paper's results
 │   ├── analyse.html          the protocol, run on a sentence you write
 │   ├── app.js                both pages: protocol, cue layer, inference
@@ -161,7 +159,7 @@ residual-attribute-leakage/
 │   └── data.json             every number on the site
 ├── tools/
 │   ├── make_demo_data.py     writes data.json from the manuscript
-│   └── build_space.py        assembles the Hugging Face Space from docs/
+│   └── build_space.py        assembles the Hugging Face Space from site/
 ├── LICENSE
 └── README.md
 ```

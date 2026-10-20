@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Assemble the Hugging Face Space from the published site.
 
-The Space is the same two pages as the GitHub Pages site, so it is generated rather than kept as
-a second copy: one source of truth in docs/, and nothing to drift. A static Space serves
-`app_file` at the root and every other file beside it, so the whole of docs/ is copied flat and
-only the README front matter is written here.
+This Space is where the demo lives. It is generated from site/ rather than edited in place, so
+there is one source of truth and nothing to drift. A static Space serves `app_file` at the root
+and every other file beside it, so the whole of site/ is copied flat and only the README front
+matter is written here.
 
     python tools/build_space.py build/space
 """
@@ -13,9 +13,8 @@ import shutil
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE = os.path.join(ROOT, "docs")
+SITE = os.path.join(ROOT, "site")
 GITHUB = "https://github.com/tuanthanh-02/residual-attribute-leakage"
-PAGES = "https://tuanthanh-02.github.io/residual-attribute-leakage/"
 
 # Every field below is in the Spaces configuration reference; colours are from its allowed list.
 FRONT = f"""---
@@ -56,8 +55,7 @@ Running the adversary is optional and needs your own OpenAI key. It stays in the
 and goes only to the provider; nothing is stored and nothing is sent until you press Run. A run
 is a handful of single-token calls and costs a fraction of a cent.
 
-Source and the paper's numbers: [{GITHUB.replace("https://", "")}]({GITHUB}) ·
-the same site is also served from [GitHub Pages]({PAGES})
+Source and the paper's numbers: [{GITHUB.replace("https://", "")}]({GITHUB})
 """
 
 
@@ -69,7 +67,7 @@ def main():
     copied = []
     for name in sorted(os.listdir(SITE)):
         src = os.path.join(SITE, name)
-        if not os.path.isfile(src) or name == ".nojekyll":   # Jekyll never runs on a Space
+        if not os.path.isfile(src):
             continue
         shutil.copy2(src, os.path.join(out, name))
         copied.append(name)
