@@ -446,3 +446,9 @@ details.primer table.spec td{height:auto}
 #pBind table.spec td{height:auto}
 .relcard.sacc{border-color:var(--ok)}
 .relcard.sacc h4{color:var(--ok)}
+
+/* the results page has six sections, so its rail needs two more colours — and a basis small
+   enough that six of them still sit on one line at the column width */
+.rail a[href="#step5"]{--rail:var(--ok)}
+.rail a[href="#step6"]{--rail:var(--ink)}
+.rail a{flex:1 1 118px;font-size:.84rem}

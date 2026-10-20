@@ -197,11 +197,8 @@ function tabBoard() {
   const lower = rows.slice(0, rank - 1).map(r => r.nm);
   const med = D.x1_medqa.slice().sort((a, b) => a.L - b.L)
     .findIndex(r => /^SWAP/.test(r.system)) + 1;
-  $("#tabnote").innerHTML = `Under L the misdirecting release ranks <b>${rank} of 8</b> here,
-    against <b>${med} of 8</b> on MedQA${lower.length
-      ? `: ${lower.map(esc).join(" and ")} leak less than it does on this corpus` : ""}. The
-    counterexample is a demonstration that a reading <em>can</em> be fooled, not a claim that it is
-    fooled everywhere; a single corpus would not have shown the difference.`;
+  $("#tabnote").innerHTML = `Here it ranks <b>${rank} of 8</b>, against <b>${med} of 8</b> on
+    MedQA. The counterexample shows a reading <em>can</em> be fooled, not that it always is.`;
 }
 
 /* ---------------------------------------------------- who the scorer asks about */

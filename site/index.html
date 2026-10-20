@@ -19,35 +19,37 @@
 <header>
   <p class="kicker">Results</p>
   <h1>Residual attribute leakage is an interface</h1>
-  <p class="tagline">A privacy verdict for a fixed de-identified text can change with how it is
-  scored, who the scorer asks about, and which adversary reads it. Every figure below is read from
-  the manuscript. To put the same protocol on a sentence of your
-  own, <a href="analyse.html">run it here</a>.</p>
+  <p class="tagline">The same de-identified text, scored several defensible ways, and the
+  verdicts disagree. <a href="analyse.html">Run the protocol on your own sentence.</a></p>
   <div class="stats" id="stats" data-ready>Loading…</div>
   <div id="primer"></div>
+  <nav class="rail" aria-label="The six sections on this page">
+    <a href="#step1"><b>1</b> Eight readings</a>
+    <a href="#step2"><b>2</b> Six editors</a>
+    <a href="#step3"><b>3</b> Seven choices</a>
+    <a href="#step4"><b>4</b> Who is asked</a>
+    <a href="#step5"><b>5</b> The instrument</a>
+    <a href="#step6"><b>6</b> What to report</a>
+  </nav>
 </header>
 
-<section data-n="1" data-rail="ink">
+<section id="step1" data-n="1" data-rail="ink">
   <p class="eyebrow">Scoring rule</p>
   <h2>One release set, eight readings</h2>
-  <p class="lede">Eight fixed MedQA releases, the same 1,473 <b>Sex</b> entries, the same
-  rule-unaware adversary. Nothing about the texts changes — only the reading. Six of the eight put
-  the misdirecting release first. Select a reading.</p>
+  <p class="lede">Eight fixed releases, one cohort, one adversary. Only the <b>reading</b>
+  changes — and six of the eight put the misdirecting release first.</p>
   <div id="readings"></div><div class="board" id="board"></div><div id="verdict"></div>
   <h3 class="step">The same eight releases on a second corpus</h3>
-  <p class="lede" style="margin-bottom:10px">MedQA is where the counterexample bites hardest. TAB
-  is the check: the same releases and the same readings on different documents.</p>
+  <p class="lede" style="margin-bottom:10px">The same releases on a second corpus, as a check.</p>
   <table id="tabboard"><thead><tr><th>Release</th><th class="n">L</th><th class="n">Leaking</th>
     <th class="n">Disclosing</th></tr></thead><tbody></tbody></table>
   <p class="note" id="tabnote"></p>
 </section>
 
-<section data-n="2" data-rail="flag">
+<section id="step2" data-n="2" data-rail="flag">
   <p class="eyebrow">Recoverability</p>
   <h2>The same spans, six editors</h2>
-  <p class="lede">One clinical vignette. Highlighted words are what each editor wrote that the
-  de-identified input does not contain. The misdirecting release writes the opposite-sex form
-  exactly where redaction writes a placeholder, so the two differ in nothing else.</p>
+  <p class="lede">One vignette, six editors. Highlighted words are what each one wrote.</p>
   <div id="editors"></div><pre id="text"></pre>
   <div class="gauge">
     <div class="lab"><span>Adversary's probability on the true value</span>
@@ -59,14 +61,16 @@
   <p class="note" id="rdetail"></p>
 </section>
 
-<section data-n="3" data-rail="blue">
+<section id="step3" data-n="3" data-rail="blue">
   <p class="eyebrow">The evaluation contribution</p>
   <h2>Seven protocol choices, each read two ways</h2>
-  <p class="lede">The paper's contribution is not a release but a protocol: it names seven choices
-  an attribute-inference evaluation has to make, holds the released texts fixed, and re-reads them
-  under the alternative. Six of the seven are re-read as verdicts over every pair of releases; the
-  seventh is validated instead, and carries no sweep number. Select a row for what the choice is
-  and what changing it did.</p>
+  <p class="lede">Seven choices every such evaluation has to make. Select a row for what the
+  choice is, and what changing it did to the verdicts.</p>
+  <details class="adj"><summary>How these were measured</summary><div class="body">
+    <p>The released texts are held fixed and re-read under the alternative, over every pair of
+    releases. Six of the seven are re-read as verdicts; the seventh is validated by judge
+    controls instead and carries no sweep number, which its row says rather than borrowing one
+    from a neighbour.</p></div></details>
   <table id="choices"><thead><tr><th>Protocol choice</th><th class="n">Changed</th>
     <th style="width:30%">Reversal / gained / lost</th><th class="n">Median |&Delta;L|</th>
     </tr></thead><tbody></tbody></table>
@@ -78,31 +82,27 @@
   seeds change 1–4%, so every rate above sits clear of the noise floor.</p>
 </section>
 
-<section data-n="4" data-rail="grey">
+<section id="step4" data-n="4" data-rail="grey">
   <p class="eyebrow">Who is asked about</p>
   <h2>The adversary can answer about the wrong person</h2>
-  <p class="lede">In judgments naming several people, the adversary reads the first-named person
-  almost perfectly and the others well below chance, because it answers about them from the
-  first-named person's cues. Pooled, the two average to .53, which describes neither.</p>
+  <p class="lede">Ask about the second person in a judgment and the adversary answers from the
+  first one's words. Pooled, the two average to .53 — a number describing neither.</p>
   <div id="person-rows"></div>
   <p class="note">Sex AUC by subject position. An editor that moved the lower bar toward chance
   would look like it had <em>increased</em> discrimination.</p>
 </section>
 
-<section data-n="5" data-rail="ok">
+<section id="step5" data-n="5" data-rail="ok">
   <p class="eyebrow">The instrument</p>
   <h2>What the traceable editor contributes</h2>
-  <p class="lede">The audit needs an editor whose every edit is attributable, so a counterexample
-  can be built at precisely the sites another editor would redact. Each principle is removed one at
-  a time, everything else held fixed.</p>
+  <p class="lede">SACC's principles, removed one at a time with everything else held fixed.</p>
   <div class="cards" id="edcards"></div>
 </section>
 
-<section data-n="6" data-rail="ink">
+<section id="step6" data-n="6" data-rail="ink">
   <p class="eyebrow">Takeaway</p>
   <h2>What to report beside a leakage score</h2>
-  <p class="lede">The audit turns into four reporting practices, each built from scores an
-  evaluation already computes.</p>
+  <p class="lede">Four practices, each built from scores an evaluation already computes.</p>
   <ol class="check" id="check"></ol>
   <div class="next" style="margin-top:18px">
     <a href="analyse.html">Run the protocol on your own sentence <span>inference, five releases, the adversary, and the cue layer by hand</span></a>
