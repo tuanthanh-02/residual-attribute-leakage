@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360"
+     font-family="Charter, Georgia, 'Times New Roman', serif">
+  <rect width="960" height="360" fill="#fffdf9"/>
+  <style>
+    .h  { font-size: 15px; font-weight: 700; fill: #17171b; letter-spacing: .02em }
+    .lb { font-size: 11px; font-weight: 700; fill: #83838e; letter-spacing: .12em;
+          font-family: ui-sans-serif, Helvetica, Arial, sans-serif }
+    .t  { font-size: 13px; fill: #17171b; font-family: ui-monospace, Menlo, Consolas, monospace }
+    .n  { font-size: 13px; fill: #55555f }
+    .v  { font-size: 26px; font-weight: 700; fill: #17171b;
+          font-family: ui-monospace, Menlo, Consolas, monospace }
+    .vf { fill: #8c3a12 } .cap { font-size: 12.5px; fill: #55555f }
+    .rule { stroke: #d9d6cf; stroke-width: 1 }
+  </style>
+
+  <text x="40" y="44" class="lb">THE SAME SPANS, TWO EDITORS</text>
+  <line x1="40" y1="56" x2="920" y2="56" stroke="#17171b" stroke-width="2"/>
+
+  <!-- input -->
+  <text x="40" y="86" class="lb">DE-IDENTIFIED INPUT</text>
+  <text x="40" y="112" class="t">[PERSON] is a 54-year-old patient. <tspan fill="#8c3a12" font-weight="700">She</tspan> came to the clinic with <tspan fill="#8c3a12" font-weight="700">her husband</tspan>.</text>
+  <text x="40" y="134" class="n">The name is gone. The sex is not: two residual cues still state it.</text>
+  <line x1="40" y1="156" x2="920" y2="156" class="rule"/>
+
+  <!-- left: redaction -->
+  <text x="40" y="188" class="lb">REDACTION — REMOVES THE CUES</text>
+  <text x="40" y="214" class="t">[PERSON] is a 54-year-old patient.</text>
+  <text x="40" y="234" class="t"><tspan fill="#9a978f">[REDACTED]</tspan> came to the clinic with <tspan fill="#9a978f">[REDACTED]</tspan>.</text>
+  <text x="40" y="276" class="n">leakage</text>
+  <text x="40" y="308" class="v">L = .653</text>
+  <text x="40" y="334" class="cap">ranks 5 of 8</text>
+
+  <line x1="480" y1="170" x2="480" y2="350" class="rule"/>
+
+  <!-- right: misdirection -->
+  <text x="516" y="188" class="lb" fill="#8c3a12">MISDIRECTION — SWAPS THEM</text>
+  <text x="516" y="214" class="t">[PERSON] is a 54-year-old patient.</text>
+  <text x="516" y="234" class="t"><tspan fill="#8c3a12" font-weight="700">He</tspan> came to the clinic with <tspan fill="#8c3a12" font-weight="700">his wife</tspan>.</text>
+  <text x="516" y="276" class="n">leakage</text>
+  <text x="516" y="308" class="v vf">L = .536</text>
+  <text x="516" y="334" class="cap" fill="#8c3a12">ranks 1 of 8 — scored as the most private</text>
+
+  <line x1="40" y1="350" x2="920" y2="350" stroke="#17171b" stroke-width="2"/>
+</svg>
